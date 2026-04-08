@@ -541,12 +541,16 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* Elementos de navidad ocultos fuera de temporada */
+    .xmas-only { display: none !important; }
+    body.xmas-mode .xmas-only { display: block !important; }
   </style>
 </head>
 <body>
-  <div class="light-string" aria-hidden="true"></div>
-  <div class="snow-layer" aria-hidden="true"></div>
-  <div class="fairy-lights" aria-hidden="true">
+  <div class="light-string xmas-only" aria-hidden="true"></div>
+  <div class="snow-layer xmas-only" aria-hidden="true"></div>
+  <div class="fairy-lights xmas-only" aria-hidden="true">
     <span></span>
     <span></span>
     <span></span>
@@ -562,9 +566,10 @@
 
   <main>
     <header class="hero">
+      <a href="index.html" class="btn btn-secondary" style="display:inline-flex;margin-bottom:1rem;font-size:.82rem;padding:.45rem 1rem;">← Volver al inicio</a>
       <img src="https://cdn.prod.website-files.com/66675b9125183e4d2a7a474e/666c90cd19e53c04711fb57f_d0164f8abe71228f954cd1112db78b48_Capa_1.svg" alt="Logo Grupo Ternova" />
-      <p>Navidad 2025 · Rifa interplanta 100% transparente</p>
-      <h1>CELEBREMOS EN GRANDE</h1>
+      <p id="rifa-subtitle">Sistema de Rifas · Grupo Ternova</p>
+      <h1 id="rifa-titulo">SORTEO EN VIVO</h1>
     </header>
 
     <section class="panel">
@@ -671,6 +676,14 @@
   </template>
 
   <script>
+    // ── Modo navidad: activo Nov (10) – Dic (11) – Ene (0) ─────────
+    (function () {
+      var m = new Date().getMonth();
+      if (m >= 10 || m === 0) {
+        document.body.classList.add('xmas-mode');
+      }
+    })();
+
     const WINNERS_PER_ROUND = 5;
     const TAG_BACKGROUNDS = [
       "url('https://www.fundeu.es/wp-content/uploads/2023/12/reco-navidad-pxhere.png')",
