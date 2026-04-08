@@ -1,0 +1,25 @@
+# Datos sensibles de participantes — NO subir al repositorio
+data/participantes_*.csv
+data/premios_*.csv
+data/datos_rifa.json
+
+# Archivos de datos históricos
+data/RIFA*/
+
+# Archivos Excel con datos personales
+*.xlsx
+*.xls
+
+# Instalador de Python (45MB)
+*.pkg
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Scripts Python locales (no necesarios en producción web)
+*.py
+
+# Archivos de desarrollo/debug
+debug.html

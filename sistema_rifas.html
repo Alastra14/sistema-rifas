@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Rifas · Grupo Ternova</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bright-orange: #ef8118;
+      --deep-violet: #2e004f;
+      --night: #0b001f;
+      --snow: #fdfbff;
+      --frost: rgba(255, 255, 255, 0.18);
+      --glass: rgba(12, 0, 35, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', 'Nunito', system-ui, sans-serif;
+      min-height: 100vh;
+      background: radial-gradient(circle at 15% 20%, #ef8118 0%, #93214e 40%, #2e004f 70%, #0b001f 100%);
+      color: var(--snow);
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--dark);
+      font-size: 2rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      background: white;
+      padding: 10px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px var(--shadow);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 15px 30px;
+      border: none;
+      background: var(--light);
+      color: var(--dark);
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .tab:hover {
+      background: #dfe6e9;
+    }
+
+    .tab.active {
+      background: var(--gradient);
+      color: white;
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 6px var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--light);
+      color: var(--dark);
+    }
+
+    .rifas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .rifa-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px var(--shadow);
+      transition: all 0.3s;
+    }
+
+    .rifa-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+
+    .rifa-card h3 {
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .rifa-card p {
+      color: #7f8c8d;
+      margin: 5px 0;
+      font-size: 0.9rem;
+    }
+
+    .rifa-card .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      color: var(--dark);
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--dark);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--light);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .upload-area {
+      border: 2px dashed var(--primary);
+      border-radius: 8px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 20px 0;
+    }
+
+    .upload-area:hover {
+      background: rgba(74, 144, 226, 0.05);
+    }
+
+    .upload-area.drag-over {
+      background: rgba(74, 144, 226, 0.1);
+      border-color: var(--success);
+    }
+
+    .lista-items {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--light);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .item {
+      background: var(--light);
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .item button {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .wizard-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .wizard-step {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      position: relative;
+    }
+
+    .wizard-step::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: var(--light);
+      z-index: -1;
+    }
+
+    .wizard-step:last-child::after {
+      display: none;
+    }
+
+    .wizard-step.active .step-number {
+      background: var(--primary);
+      color: white;
+    }
+
+    .wizard-step.completed .step-number {
+      background: var(--success);
+      color: white;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--light);
+      color: var(--dark);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step-label {
+      font-size: 0.9rem;
+      color: var(--dark);
+    }
+
+    .wizard-content {
+      min-height: 300px;
+    }
+
+    .wizard-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #7f8c8d;
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: #bdc3c7;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-pendiente {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-en-progreso {
+      background: #cce5ff;
+      color: #004085;
+    }
+
+    .status-completada {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    /* Estilos para ejecución de rifas */
+    .ejecucion-container {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 6px var(--shadow);
+    }
+
+    .info-bar {
+      background: var(--gradient);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .info-item {
+      text-align: center;
+    }
+
+    .info-item .label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+
+    .info-item .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .winners-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .winner-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      padding: 20px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      animation: fadeInUp 0.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .winner-card .codigo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .winner-card .nombre {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      opacity: 0.95;
+    }
+
+    .winner-card .premio {
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.2);
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    .control-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin: 30px 0;
+    }
+
+    .timeline {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding: 20px 0;
+      margin: 20px 0;
+    }
+
+    .timeline-item {
+      min-width: 200px;
+      background: white;
+      border: 2px solid var(--light);
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .timeline-item.active {
+      border-color: var(--primary);
+      background: rgba(74, 144, 226, 0.05);
+    }
+
+    .timeline-item.completed {
+      border-color: var(--success);
+      background: rgba(39, 174, 96, 0.05);
+    }
+
+    .timeline-item h4 {
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .timeline-item .progress {
+      height: 6px;
+      background: var(--light);
+      border-radius: 3px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+
+    .timeline-item .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .input-group input {
+      flex: 1;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--dark);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 2000;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1><i class="fas fa-gift"></i> Sistema de Rifas</h1>
+      <button class="btn btn-primary" onclick="abrirModalNuevaRifa()">
+        <i class="fas fa-plus"></i> Nueva Rifa
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="cambiarTab('gestionar')">
+        <i class="fas fa-list"></i> Gestionar Rifas
+      </button>
+      <button class="tab" onclick="cambiarTab('ejecutar')">
+        <i class="fas fa-play"></i> Ejecutar Rifas
+      </button>
+    </div>
+
+    <!-- Tab: Gestionar Rifas -->
+    <div id="tab-gestionar" class="tab-content active">
+      <div id="rifas-container" class="rifas-grid"></div>
+    </div>
+
+    <!-- Tab: Ejecutar Rifas -->
+    <div id="tab-ejecutar" class="tab-content">
+      <div id="ejecucion-container"></div>
+    </div>
+  </div>
+
+  <!-- Modal: Nueva Rifa -->
+  <div id="modal-nueva-rifa" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Nueva Rifa</h2>
+        <button class="close-modal" onclick="cerrarModal()"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- Wizard Steps -->
+      <div class="wizard-steps">
+        <div class="wizard-step active">
+          <div class="step-number">1</div>
+          <div class="step-label">Información</div>
+        </div>
+        <div class="wizard-step">
+          <div class="step-number">2</div>
+          <div class="step-label">Premios</div>
+        </div>
+        <div class="wizard-step">
+          <div class="step-number">3</div>
+          <div class="step-label">Participantes</div>
+        </div>
+        <div class="wizard-step">
+          <div class="step-number">4</div>
+          <div class="step-label">Confirmar</div>
+        </div>
+      </div>
+
+      <!-- Wizard Content -->
+      <div class="wizard-content">
+        <!-- Paso 1: Información -->
+        <div id="paso-1" class="wizard-page">
+          <div class="form-group">
+            <label>Nombre de la Rifa</label>
+            <input type="text" id="rifa-nombre" placeholder="Ej: Rifa Navideña 2025">
+          </div>
+          <div class="form-group">
+            <label>Descripción (opcional)</label>
+            <textarea id="rifa-descripcion" rows="3" placeholder="Describe esta rifa..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" id="rifa-fecha">
+          </div>
+        </div>
+
+        <!-- Paso 2: Premios -->
+        <div id="paso-2" class="wizard-page" style="display: none;">
+          <h3>Agregar Premios</h3>
+          
+          <!-- Opción 1: Agregar manualmente -->
+          <div class="form-group">
+            <label>Agregar Premio Manualmente</label>
+            <div class="input-group">
+              <input type="text" id="premio-nombre" placeholder="Nombre del premio" style="flex: 3;">
+              <button class="btn btn-success" onclick="agregarPremioManual()">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Opción 2: Cargar CSV -->
+          <div class="upload-area" id="upload-premios" onclick="document.getElementById('file-premios').click()">
+            <i class="fas fa-file-csv" style="font-size: 3rem; color: var(--primary); margin-bottom: 10px;"></i>
+            <p><strong>Cargar CSV de Premios</strong></p>
+            <p style="font-size: 0.9rem; color: #7f8c8d;">Arrastra o haz clic para seleccionar</p>
+            <input type="file" id="file-premios" accept=".csv" style="display: none;" onchange="cargarPremiosCSV(event)">
+          </div>
+
+          <!-- Lista de premios -->
+          <div id="lista-premios" class="lista-items"></div>
+        </div>
+
+        <!-- Paso 3: Participantes -->
+        <div id="paso-3" class="wizard-page" style="display: none;">
+          <h3>Agregar Participantes</h3>
+          
+          <!-- Opción 1: Agregar manualmente -->
+          <div class="form-group">
+            <label>Agregar Participante Manualmente</label>
+            <div class="input-group">
+              <input type="text" id="participante-codigo" placeholder="Código" style="flex: 1;">
+              <input type="text" id="participante-nombre" placeholder="Nombre" style="flex: 2;">
+              <button class="btn btn-success" onclick="agregarParticipanteManual()">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Opción 2: Cargar CSV -->
+          <div class="upload-area" id="upload-participantes" onclick="document.getElementById('file-participantes').click()">
+            <i class="fas fa-file-csv" style="font-size: 3rem; color: var(--primary); margin-bottom: 10px;"></i>
+            <p><strong>Cargar CSV de Participantes</strong></p>
+            <p style="font-size: 0.9rem; color: #7f8c8d;">Arrastra o haz clic para seleccionar</p>
+            <input type="file" id="file-participantes" accept=".csv" style="display: none;" onchange="cargarParticipantesCSV(event)">
+          </div>
+
+          <!-- Lista de participantes -->
+          <div id="lista-participantes" class="lista-items"></div>
+        </div>
+
+        <!-- Paso 4: Confirmar -->
+        <div id="paso-4" class="wizard-page" style="display: none;">
+          <h3>Resumen de la Rifa</h3>
+          <div id="resumen-rifa"></div>
+        </div>
+      </div>
+
+      <!-- Wizard Navigation -->
+      <div class="wizard-navigation">
+        <button class="btn btn-secondary" id="btn-anterior" onclick="anteriorPaso()" style="display: none;">
+          <i class="fas fa-arrow-left"></i> Anterior
+        </button>
+        <button class="btn btn-primary" id="btn-siguiente" onclick="siguientePaso()">
+          Siguiente <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // Estado de la aplicación
+    const estado = {
+      rifas: [],
+      rifaActual: null,
+      pasoWizard: 1,
+      rifaTemporal: {
+        nombre: '',
+        descripcion: '',
+        fecha: '',
+        premios: [],
+        participantes: []
+      },
+      ejecucion: {
+        rifaId: null,
+        plantas: [],
+        plantaActual: 0,
+        rondaActual: 0,
+        ganadores: [],
+        ganadoresActuales: []
+      }
+    };
+
+    // Inicializar
+    function init() {
+      cargarRifas();
+      renderRifas();
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('rifa-fecha').value = today;
+    }
+
+    // Gestión de localStorage
+    function cargarRifas() {
+      const data = localStorage.getItem('rifas');
+      estado.rifas = data ? JSON.parse(data) : [];
+    }
+
+    function guardarRifas() {
+      localStorage.setItem('rifas', JSON.stringify(estado.rifas));
+    }
+
+    // Cambiar tab
+    function cambiarTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(`tab-${tab}`).classList.add('active');
+
+      if (tab === 'ejecutar') {
+        renderEjecutarRifas();
+      }
+    }
+
+    // Renderizar rifas en gestionar
+    function renderRifas() {
+      const container = document.getElementById('rifas-container');
+      
+      if (estado.rifas.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>No hay rifas creadas</h3>
+            <p>Crea tu primera rifa usando el botón "Nueva Rifa"</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = estado.rifas.map((rifa, index) => `
+        <div class="rifa-card">
+          <h3>${rifa.nombre}</h3>
+          <p><i class="fas fa-calendar"></i> ${rifa.fecha}</p>
+          <p><i class="fas fa-gift"></i> ${rifa.premios ? rifa.premios.length : 0} premios</p>
+          <p><i class="fas fa-users"></i> ${rifa.participantes ? rifa.participantes.length : 0} participantes</p>
+          <span class="status-badge status-${rifa.estado}">${rifa.estado.replace('-', ' ')}</span>
+          <div class="actions">
+            ${rifa.estado === 'pendiente' ? `
+              <button class="btn btn-success" onclick="iniciarRifa(${index})">
+                <i class="fas fa-play"></i> Ejecutar
+              </button>
+            ` : ''}
+            <button class="btn btn-danger" onclick="eliminarRifa(${index})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Modal
+    function abrirModalNuevaRifa() {
+      document.getElementById('modal-nueva-rifa').classList.add('active');
+      resetWizard();
+    }
+
+    function cerrarModal() {
+      document.getElementById('modal-nueva-rifa').classList.remove('active');
+    }
+
+    function resetWizard() {
+      estado.pasoWizard = 1;
+      estado.rifaTemporal = {
+        nombre: '',
+        descripcion: '',
+        fecha: new Date().toISOString().split('T')[0],
+        premios: [],
+        participantes: []
+      };
+      actualizarWizard();
+    }
+
+    function actualizarWizard() {
+      // Actualizar pasos visuales
+      document.querySelectorAll('.wizard-step').forEach((step, index) => {
+        step.classList.remove('active', 'completed');
+        if (index + 1 === estado.pasoWizard) {
+          step.classList.add('active');
+        } else if (index + 1 < estado.pasoWizard) {
+          step.classList.add('completed');
+        }
+      });
+
+      // Mostrar página correcta
+      document.querySelectorAll('.wizard-page').forEach((page, index) => {
+        page.style.display = (index + 1 === estado.pasoWizard) ? 'block' : 'none';
+      });
+
+      // Botones de navegación
+      document.getElementById('btn-anterior').style.display = estado.pasoWizard > 1 ? 'inline-flex' : 'none';
+      const btnSiguiente = document.getElementById('btn-siguiente');
+      btnSiguiente.innerHTML = estado.pasoWizard === 4 
+        ? '<i class="fas fa-check"></i> Crear Rifa'
+        : 'Siguiente <i class="fas fa-arrow-right"></i>';
+
+      // Si estamos en el paso 4, mostrar resumen
+      if (estado.pasoWizard === 4) {
+        mostrarResumen();
+      }
+    }
+
+    function siguientePaso() {
+      if (estado.pasoWizard === 1) {
+        const nombre = document.getElementById('rifa-nombre').value.trim();
+        if (!nombre) {
+          mostrarToast('Por favor ingresa un nombre para la rifa');
+          return;
+        }
+        estado.rifaTemporal.nombre = nombre;
+        estado.rifaTemporal.descripcion = document.getElementById('rifa-descripcion').value.trim();
+        estado.rifaTemporal.fecha = document.getElementById('rifa-fecha').value;
+      }
+
+      if (estado.pasoWizard === 2) {
+        if (estado.rifaTemporal.premios.length === 0) {
+          mostrarToast('Por favor agrega al menos un premio');
+          return;
+        }
+      }
+
+      if (estado.pasoWizard === 3) {
+        if (estado.rifaTemporal.participantes.length === 0) {
+          mostrarToast('Por favor agrega al menos un participante');
+          return;
+        }
+      }
+
+      if (estado.pasoWizard === 4) {
+        crearRifa();
+        return;
+      }
+
+      estado.pasoWizard++;
+      actualizarWizard();
+    }
+
+    function anteriorPaso() {
+      estado.pasoWizard--;
+      actualizarWizard();
+    }
+
+    // Gestión de premios
+    function agregarPremioManual() {
+      const nombre = document.getElementById('premio-nombre').value.trim();
+      
+      if (!nombre) {
+        mostrarToast('Ingresa el nombre del premio');
+        return;
+      }
+
+      estado.rifaTemporal.premios.push({
+        premio_completo: nombre
+      });
+
+      document.getElementById('premio-nombre').value = '';
+      renderPremios();
+      mostrarToast('Premio agregado');
+    }
+
+    function cargarPremiosCSV(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const texto = e.target.result;
+        const lineas = texto.split('\n').filter(l => l.trim());
+        
+        if (lineas.length < 2) {
+          mostrarToast('El archivo CSV está vacío o mal formado');
+          return;
+        }
+
+        const headers = lineas[0].split(',').map(h => h.trim().toLowerCase());
+        const premioIdx = headers.findIndex(h => h.includes('premio'));
+
+        if (premioIdx === -1) {
+          mostrarToast('El CSV debe tener una columna "premio"');
+          return;
+        }
+
+        for (let i = 1; i < lineas.length; i++) {
+          const valores = lineas[i].split(',').map(v => v.trim());
+          if (valores[premioIdx]) {
+            estado.rifaTemporal.premios.push({
+              premio_completo: valores[premioIdx]
+            });
+          }
+        }
+
+        renderPremios();
+        mostrarToast(`${lineas.length - 1} premios cargados`);
+      };
+      reader.readAsText(file);
+    }
+
+    function renderPremios() {
+      const lista = document.getElementById('lista-premios');
+      lista.innerHTML = estado.rifaTemporal.premios.map((p, i) => `
+        <div class="item">
+          <div>
+            <strong>${p.premio_completo}</strong>
+          </div>
+          <button onclick="eliminarPremio(${i})"><i class="fas fa-times"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function eliminarPremio(index) {
+      estado.rifaTemporal.premios.splice(index, 1);
+      renderPremios();
+    }
+
+    // Gestión de participantes
+    function agregarParticipanteManual() {
+      const codigo = document.getElementById('participante-codigo').value.trim();
+      const nombre = document.getElementById('participante-nombre').value.trim();
+      
+      if (!codigo || !nombre) {
+        mostrarToast('Ingresa código y nombre del participante');
+        return;
+      }
+
+      estado.rifaTemporal.participantes.push({
+        codigo: codigo,
+        nombre: nombre
+      });
+
+      document.getElementById('participante-codigo').value = '';
+      document.getElementById('participante-nombre').value = '';
+      renderParticipantes();
+      mostrarToast('Participante agregado');
+    }
+
+    function cargarParticipantesCSV(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const texto = e.target.result;
+        const lineas = texto.split('\n').filter(l => l.trim());
+        
+        if (lineas.length < 2) {
+          mostrarToast('El archivo CSV está vacío o mal formado');
+          return;
+        }
+
+        const headers = lineas[0].split(',').map(h => h.trim().toLowerCase());
+        const codigoIdx = headers.findIndex(h => h.includes('codigo'));
+        const nombreIdx = headers.findIndex(h => h.includes('nombre'));
+
+        if (codigoIdx === -1 || nombreIdx === -1) {
+          mostrarToast('El CSV debe tener columnas "codigo" y "nombre"');
+          return;
+        }
+
+        for (let i = 1; i < lineas.length; i++) {
+          const valores = lineas[i].split(',').map(v => v.trim());
+          if (valores[codigoIdx] && valores[nombreIdx]) {
+            estado.rifaTemporal.participantes.push({
+              codigo: valores[codigoIdx],
+              nombre: valores[nombreIdx]
+            });
+          }
+        }
+
+        renderParticipantes();
+        mostrarToast(`${lineas.length - 1} participantes cargados`);
+      };
+      reader.readAsText(file);
+    }
+
+    function renderParticipantes() {
+      const lista = document.getElementById('lista-participantes');
+      lista.innerHTML = estado.rifaTemporal.participantes.map((p, i) => `
+        <div class="item">
+          <div>
+            <strong>${p.codigo} - ${p.nombre}</strong>
+          </div>
+          <button onclick="eliminarParticipante(${i})"><i class="fas fa-times"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function eliminarParticipante(index) {
+      estado.rifaTemporal.participantes.splice(index, 1);
+      renderParticipantes();
+    }
+
+    // Mostrar resumen
+    function mostrarResumen() {
+      const resumen = document.getElementById('resumen-rifa');
+
+      resumen.innerHTML = `
+        <div style="background: var(--light); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h4>${estado.rifaTemporal.nombre}</h4>
+          <p>${estado.rifaTemporal.descripcion || 'Sin descripción'}</p>
+          <p><strong>Fecha:</strong> ${estado.rifaTemporal.fecha}</p>
+        </div>
+        
+        <div style="background: white; border: 2px solid var(--light); padding: 20px; border-radius: 8px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="text-align: center; padding: 20px; background: var(--light); border-radius: 8px;">
+              <i class="fas fa-gift" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 10px;"></i>
+              <h3 style="margin: 10px 0; font-size: 2rem; color: var(--dark);">${estado.rifaTemporal.premios.length}</h3>
+              <p style="color: #7f8c8d; font-weight: 600;">Premios</p>
+            </div>
+            <div style="text-align: center; padding: 20px; background: var(--light); border-radius: 8px;">
+              <i class="fas fa-users" style="font-size: 2.5rem; color: var(--success); margin-bottom: 10px;"></i>
+              <h3 style="margin: 10px 0; font-size: 2rem; color: var(--dark);">${estado.rifaTemporal.participantes.length}</h3>
+              <p style="color: #7f8c8d; font-weight: 600;">Participantes</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Crear rifa
+    function crearRifa() {
+      const rifa = {
+        id: Date.now(),
+        nombre: estado.rifaTemporal.nombre,
+        descripcion: estado.rifaTemporal.descripcion,
+        fecha: estado.rifaTemporal.fecha,
+        estado: 'pendiente',
+        premios: [...estado.rifaTemporal.premios],
+        participantes: [...estado.rifaTemporal.participantes],
+        ganadores: []
+      };
+
+      estado.rifas.push(rifa);
+      guardarRifas();
+      renderRifas();
+      cerrarModal();
+      mostrarToast('Rifa creada exitosamente');
+    }
+
+    // Eliminar rifa
+    function eliminarRifa(index) {
+      if (confirm('¿Estás seguro de eliminar esta rifa?')) {
+        estado.rifas.splice(index, 1);
+        guardarRifas();
+        renderRifas();
+        mostrarToast('Rifa eliminada');
+      }
+    }
+
+    // =====================================================
+    // EJECUCIÓN DE RIFAS
+    // =====================================================
+
+    function renderEjecutarRifas() {
+      const container = document.getElementById('ejecucion-container');
+      const rifasPendientes = estado.rifas.filter(r => r.estado === 'pendiente');
+
+      if (rifasPendientes.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-clipboard-check"></i>
+            <h3>No hay rifas pendientes</h3>
+            <p>Todas las rifas han sido completadas</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="card">
+          <h2>Selecciona una rifa para ejecutar</h2>
+          <div class="rifas-grid">
+            ${rifasPendientes.map((rifa, idx) => {
+              const index = estado.rifas.findIndex(r => r.id === rifa.id);
+              return `
+                <div class="rifa-card">
+                  <h3>${rifa.nombre}</h3>
+                  <p><i class="fas fa-calendar"></i> ${rifa.fecha}</p>
+                  <p><i class="fas fa-gift"></i> ${rifa.premios ? rifa.premios.length : 0} premios</p>
+                  <p><i class="fas fa-users"></i> ${rifa.participantes ? rifa.participantes.length : 0} participantes</p>
+                  <button class="btn btn-success" onclick="iniciarRifa(${index})" style="width: 100%; margin-top: 10px;">
+                    <i class="fas fa-play"></i> Iniciar Ejecución
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function iniciarRifa(index) {
+      const rifa = estado.rifas[index];
+      rifa.estado = 'en-progreso';
+      estado.rifaActual = index;
+      guardarRifas();
+
+      // Preparar ejecución
+      estado.ejecucion.rifaId = rifa.id;
+      estado.ejecucion.premios = [...rifa.premios];
+      estado.ejecucion.participantes = shuffle([...rifa.participantes]);
+      estado.ejecucion.totalPremios = rifa.premios.length;
+      estado.ejecucion.rondaActual = 0;
+      estado.ejecucion.ganadores = [];
+      estado.ejecucion.ganadoresActuales = [];
+
+      renderEjecucion();
+    }
+
+    function renderEjecucion() {
+      const container = document.getElementById('ejecucion-container');
+      const rifa = estado.rifas[estado.rifaActual];
+
+      if (!rifa) return;
+
+      const premiosRestantes = estado.ejecucion.premios.length;
+      const totalRondas = Math.ceil(estado.ejecucion.totalPremios / 5);
+      const progreso = estado.ejecucion.totalPremios > 0 
+        ? ((estado.ejecucion.totalPremios - premiosRestantes) / estado.ejecucion.totalPremios * 100).toFixed(0)
+        : 100;
+
+      if (premiosRestantes === 0) {
+        finalizarRifa();
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="ejecucion-container">
+          <h2>${rifa.nombre}</h2>
+          
+          <!-- Barra de progreso -->
+          <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <h3 style="margin: 0;">Progreso del Sorteo</h3>
+              <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">${progreso}%</span>
+            </div>
+            <div style="height: 20px; background: var(--light); border-radius: 10px; overflow: hidden;">
+              <div style="height: 100%; background: var(--gradient); width: ${progreso}%; transition: width 0.5s;"></div>
+            </div>
+          </div>
+
+          <!-- Info Bar -->
+          <div class="info-bar">
+            <div class="info-item">
+              <div class="label">Ronda Actual</div>
+              <div class="value">${estado.ejecucion.rondaActual + 1} / ${totalRondas}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Premios Restantes</div>
+              <div class="value">${premiosRestantes}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Participantes Disponibles</div>
+              <div class="value">${estado.ejecucion.participantes.length}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Total Ganadores</div>
+              <div class="value">${estado.ejecucion.ganadores.length}</div>
+            </div>
+          </div>
+
+          <!-- Ganadores actuales -->
+          <div class="winners-grid" id="winners-grid"></div>
+
+          <!-- Controles -->
+          <div class="control-buttons">
+            <button class="btn btn-primary" onclick="sortearGanadores()" style="font-size: 1.2rem; padding: 15px 40px;">
+              <i class="fas fa-random"></i> Sortear ${Math.min(5, premiosRestantes, estado.ejecucion.participantes.length)} Ganadores
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function sortearGanadores() {
+      const cantidadGanadores = Math.min(5, estado.ejecucion.premios.length, estado.ejecucion.participantes.length);
+      
+      if (cantidadGanadores === 0) {
+        mostrarToast('No hay premios o participantes disponibles');
+        return;
+      }
+
+      const ganadoresRonda = [];
+
+      for (let i = 0; i < cantidadGanadores; i++) {
+        const participante = estado.ejecucion.participantes.shift();
+        const premio = estado.ejecucion.premios.shift();
+        
+        const ganador = {
+          codigo: participante.codigo,
+          nombre: participante.nombre,
+          premio: premio.premio_completo,
+          ronda: estado.ejecucion.rondaActual + 1
+        };
+
+        ganadoresRonda.push(ganador);
+        estado.ejecucion.ganadores.push(ganador);
+      }
+
+      estado.ejecucion.rondaActual++;
+      estado.ejecucion.ganadoresActuales = ganadoresRonda;
+
+      // Animar ganadores
+      const grid = document.getElementById('winners-grid');
+      grid.innerHTML = '';
+      
+      ganadoresRonda.forEach((ganador, i) => {
+        setTimeout(() => {
+          const card = document.createElement('div');
+          card.className = 'winner-card';
+          card.innerHTML = `
+            <div class="codigo">${ganador.codigo}</div>
+            <div class="nombre">${ganador.nombre}</div>
+            <div class="premio"><i class="fas fa-gift"></i> ${ganador.premio}</div>
+          `;
+          grid.appendChild(card);
+        }, i * 300);
+      });
+
+      // Guardar ganadores en la rifa
+      const rifa = estado.rifas[estado.rifaActual];
+      if (!rifa.ganadores) rifa.ganadores = [];
+      rifa.ganadores.push(...ganadoresRonda);
+      guardarRifas();
+
+      setTimeout(() => {
+        renderEjecucion();
+      }, ganadoresRonda.length * 300 + 1000);
+    }
+
+    function finalizarRifa() {
+      const rifa = estado.rifas[estado.rifaActual];
+      rifa.estado = 'completada';
+      guardarRifas();
+
+      const container = document.getElementById('ejecucion-container');
+      container.innerHTML = `
+        <div class="ejecucion-container">
+          <div style="text-align: center; padding: 60px 20px;">
+            <i class="fas fa-check-circle" style="font-size: 6rem; color: var(--success); margin-bottom: 20px;"></i>
+            <h2>¡Rifa Completada!</h2>
+            <p style="font-size: 1.2rem; color: #7f8c8d; margin: 20px 0;">${rifa.nombre}</p>
+            <p style="font-size: 1.1rem; margin-bottom: 30px;">
+              <strong>${estado.ejecucion.ganadores.length}</strong> ganadores totales
+            </p>
+            <button class="btn btn-primary" onclick="volverAEjecutar()">
+              <i class="fas fa-arrow-left"></i> Volver a Rifas
+            </button>
+            <button class="btn btn-success" onclick="descargarResultados()">
+              <i class="fas fa-download"></i> Descargar Resultados
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function volverAEjecutar() {
+      estado.rifaActual = null;
+      renderEjecutarRifas();
+    }
+
+    function descargarResultados() {
+      const rifa = estado.rifas[estado.rifaActual];
+      let csv = 'Ronda,Código,Nombre,Premio\n';
+      
+      rifa.ganadores.forEach(g => {
+        csv += `${g.ronda},${g.codigo},${g.nombre},"${g.premio}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `resultados_${rifa.nombre.replace(/\s+/g, '_')}.csv`;
+      a.click();
+    }
+
+    // Utilidades
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function mostrarToast(mensaje) {
+      const toast = document.getElementById('toast');
+      toast.textContent = mensaje;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Drag and drop para upload areas
+    ['upload-premios', 'upload-participantes'].forEach(id => {
+      const area = document.getElementById(id);
+      if (area) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          area.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+          area.addEventListener(eventName, () => area.classList.add('drag-over'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+          area.addEventListener(eventName, () => area.classList.remove('drag-over'), false);
+        });
+
+        area.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          if (files.length > 0) {
+            if (id === 'upload-premios') {
+              cargarPremiosCSV({ target: { files: [files[0]] } });
+            } else {
+              cargarParticipantesCSV({ target: { files: [files[0]] } });
+            }
+          }
+        }
+      }
+    });
+
+    // Iniciar al cargar la página
+    init();
+  </script>
+</body>
+</html>

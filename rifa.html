@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rifa Interplanta · Navidad Ternova 2025</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bright-orange: #ef8118;
+      --deep-violet: #2e004f;
+      --night: #0b001f;
+      --snow: #fdfbff;
+      --frost: rgba(255, 255, 255, 0.18);
+      --glass: rgba(12, 0, 35, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat', 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      background: radial-gradient(circle at 15% 20%, #ef8118 0%, #93214e 40%, #2e004f 70%, #0b001f 100%);
+      color: var(--snow);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1544636295-7a50351a5731?auto=format&fit=crop&w=1600&q=60');
+      opacity: 0.08;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .light-string {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      background-image: url('https://cdn.prod.website-files.com/66675b9125183e4d2a7a474e/66956ab924f5ae55024c2808_Vector%202.png');
+      background-size: cover;
+      opacity: 0.9;
+      pointer-events: none;
+      animation: twinkle 5s linear infinite alternate;
+    }
+
+    @keyframes twinkle {
+      from { filter: brightness(0.9); }
+      to { filter: brightness(1.2); }
+    }
+
+    .snow-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      overflow: visible;
+      z-index: 100;
+    }
+
+    .snowflake {
+      position: absolute;
+      color: white;
+      font-size: 1em;
+      opacity: 0.8;
+      animation: snowfall linear infinite;
+      text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes snowfall {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(150vh) translateX(var(--drift)) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .fairy-lights {
+      position: fixed;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .fairy-lights span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffe66a, #ff7ad1);
+      filter: drop-shadow(0 0 6px rgba(255, 214, 102, 0.8));
+      animation: lights 4s ease-in-out infinite;
+    }
+
+    .logo-badge {
+      position: fixed;
+      bottom: 1.2rem;
+      right: 1.5rem;
+      z-index: 5;
+    }
+
+    .logo-badge img {
+      width: 140px;
+      height: auto;
+      filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.65));
+      display: block;
+    }
+
+    @keyframes lights {
+      0% { transform: translateY(0) scale(0.8); }
+      50% { transform: translateY(-4px) scale(1); }
+      100% { transform: translateY(0) scale(0.85); }
+    }
+
+    @keyframes snowfall {
+      from { transform: translateY(-200px); }
+      to { transform: translateY(200px); }
+    }
+
+    main {
+      width: min(1300px, calc(100% - 2.5rem));
+      margin: 0 auto;
+      padding: 2.5rem 0 4rem;
+      position: relative;
+      z-index: 5;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero img {
+      width: 220px;
+    }
+
+    .hero h1 {
+      margin: 0.5rem 0 0;
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      letter-spacing: 0.12em;
+    }
+
+    .hero p {
+      margin: 0.3rem 0 0;
+      opacity: 0.8;
+    }
+
+    .panel {
+      background: var(--glass);
+      border-radius: 28px;
+      padding: 2rem;
+      box-shadow: 0 35px 90px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(25px);
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h2 {
+      margin-top: 0;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .setup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .plant-selector {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .selector-item {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      cursor: grab;
+    }
+
+    .selector-item.dragging {
+      opacity: 0.4;
+    }
+
+    .selector-item .handle {
+      font-size: 1.3rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .selector-item label {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      width: 100%;
+    }
+
+    .selector-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--bright-orange);
+    }
+
+    .selector-item .name {
+      font-weight: 600;
+    }
+
+    .selector-item small {
+      display: block;
+      opacity: 0.7;
+      font-size: 0.8rem;
+    }
+
+    .selector-actions {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.85rem 1.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(130deg, #ef8118, #f8b347);
+      color: #2e004f;
+      box-shadow: 0 18px 45px rgba(239, 129, 24, 0.35);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      color: var(--snow);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--snow);
+      border: 1px solid transparent;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    .metric-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .metric-card span {
+      display: block;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.75;
+    }
+
+    .metric-card strong {
+      font-size: 1.9rem;
+    }
+
+    .stage-panel {
+      margin-top: 1.5rem;
+    }
+
+    .stage-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stage-title {
+      font-size: clamp(2.2rem, 6vw, 3.3rem);
+      letter-spacing: 0.15em;
+      margin: 0;
+    }
+
+    .stage-subtitle {
+      margin: 0;
+      opacity: 0.8;
+    }
+
+    .winner-grid {
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .tag-card {
+      --card-image: none;
+      position: relative;
+      border-radius: 26px;
+      padding: 1.4rem 1rem 2.1rem;
+      text-align: center;
+      min-height: 280px;
+      overflow: hidden;
+      background-image: linear-gradient(170deg, rgba(46, 0, 79, 0.8), rgba(239, 129, 24, 0.35)), var(--card-image);
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.35);
+      animation: cardEnter 0.6s ease-out forwards;
+      opacity: 0;
+      transform: translateY(30px) scale(0.9);
+      z-index: 5;
+    }
+
+    @keyframes cardEnter {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .tag-card:nth-child(1) { animation-delay: 0.1s; }
+    .tag-card:nth-child(2) { animation-delay: 0.2s; }
+    .tag-card:nth-child(3) { animation-delay: 0.3s; }
+    .tag-card:nth-child(4) { animation-delay: 0.4s; }
+    .tag-card:nth-child(5) { animation-delay: 0.5s; }
+
+    .tag-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.35), transparent 45%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .tag-card .tag-code {
+      display: inline-block;
+      padding: 0.25rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.45);
+      letter-spacing: 0.08em;
+      font-size: 0.9rem;
+    }
+
+    .tag-card .tag-name {
+      margin: 1.2rem 0 0.6rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .tag-card .tag-gift {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .tag-card .tag-provider {
+      margin-top: 0.6rem;
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .control-bar {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .info-chip {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.85rem 1.1rem;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 0.95rem;
+    }
+
+    .timeline {
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .timeline-card {
+      border-radius: 18px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .timeline-card.active {
+      border-color: var(--bright-orange);
+      box-shadow: 0 18px 40px rgba(239, 129, 24, 0.3);
+    }
+
+    .timeline-card.done {
+      opacity: 0.6;
+    }
+
+    .timeline-progress {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      margin: 0.6rem 0;
+    }
+
+    .timeline-progress div {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ef8118, #ffcf70);
+      width: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 0.6rem 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
+    }
+
+    thead {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    footer {
+      text-align: center;
+      opacity: 0.7;
+      margin-top: 1.5rem;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      padding: 0.85rem 1.3rem;
+      border-radius: 999px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    #toast.visible {
+      opacity: 1;
+    }
+
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 0, 31, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .spinner {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #ef8118;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 760px) {
+      .control-bar {
+        flex-direction: column;
+      }
+
+      .setup-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="light-string" aria-hidden="true"></div>
+  <div class="snow-layer" aria-hidden="true"></div>
+  <div class="fairy-lights" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div id="loading-screen">
+    <div class="spinner"></div>
+    <p>Cargando información de premios y colaboradores...</p>
+  </div>
+
+  <main>
+    <header class="hero">
+      <img src="https://cdn.prod.website-files.com/66675b9125183e4d2a7a474e/666c90cd19e53c04711fb57f_d0164f8abe71228f954cd1112db78b48_Capa_1.svg" alt="Logo Grupo Ternova" />
+      <p>Navidad 2025 · Rifa interplanta 100% transparente</p>
+      <h1>CELEBREMOS EN GRANDE</h1>
+    </header>
+
+    <section class="panel">
+      <h2>1. Configura las plantas a participar</h2>
+      <div class="setup-grid">
+        <div>
+          <ul id="plant-selector" class="plant-selector"></ul>
+          <p style="opacity:0.8;font-size:0.9rem;">Arrastra para ordenar el turno de cada planta y marca solo las que quieras incluir.</p>
+        </div>
+        <div>
+          <div class="selector-actions">
+            <button id="btn-load-data" class="btn btn-secondary" type="button">Cargar CSV</button>
+            <button id="btn-select-all" class="btn btn-ghost" type="button">Seleccionar todas</button>
+            <button id="btn-apply-selection" class="btn btn-primary" type="button">Aplicar orden y filtros</button>
+          </div>
+          <p style="margin-top:1rem;opacity:0.7;">Selecciona tus archivos de participantes y premios para cargar los datos localmente. También puedes ajustar el orden luego de cargarlos.</p>
+          <input id="file-loader" type="file" accept=".json,.csv" multiple style="display:none" aria-hidden="true" />
+        </div>
+      </div>
+    </section>
+
+    <section class="panel stage-panel">
+      <div class="stage-top">
+        <div>
+          <p id="stage-subtitle" class="stage-subtitle">Preparando información...</p>
+          <h2 id="planta-display" class="stage-title">---</h2>
+        </div>
+        <button id="btn-fullscreen" class="btn btn-secondary" type="button">Pantalla completa</button>
+      </div>
+
+      <div class="metrics">
+        <article class="metric-card">
+          <span>Ronda en planta</span>
+          <strong id="stage-round">0</strong>
+        </article>
+        <article class="metric-card">
+          <span>Rondas restantes</span>
+          <strong id="rounds-left">0</strong>
+        </article>
+        <article class="metric-card">
+          <span>Premios restantes</span>
+          <strong id="stage-prizes">0</strong>
+        </article>
+        <article class="metric-card">
+          <span>Ronda global</span>
+          <strong id="global-round">0</strong>
+        </article>
+        <article class="metric-card">
+          <span>Ganadores totales</span>
+          <strong id="winners-count">0</strong>
+        </article>
+      </div>
+
+      <div class="winner-grid" id="winners-grid"></div>
+
+      <div class="control-bar">
+        <button id="btn-atras" class="btn btn-secondary" type="button" style="display:none;">← Atrás</button>
+        <button id="btn-siguiente" class="btn btn-primary" type="button">Mostrar 5 ganadores</button>
+        <button id="btn-restart" class="btn btn-secondary" type="button">Reiniciar rifa</button>
+        <div class="info-chip" id="info-chip">Se muestran 5 ganadores por ronda · Continúa hasta agotar premios de cada planta.</div>
+      </div>
+
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Histórico completo</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Planta</th>
+            <th>Ronda</th>
+            <th>Colaborador</th>
+            <th>Código</th>
+            <th>Premio</th>
+            <th>Código premio</th>
+            <th>Proveedor</th>
+          </tr>
+        </thead>
+        <tbody id="historial-body"></tbody>
+      </table>
+      <div class="selector-actions" style="margin-top:1rem;">
+        <button id="btn-reporte" class="btn btn-primary" type="button">Descargar reporte CSV</button>
+        <button id="btn-copiar" class="btn btn-secondary" type="button">Copiar resumen</button>
+      </div>
+    </section>
+
+    <footer>© 2025 Grupo Ternova · Tradición, innovación y alegría en cada planta.</footer>
+  </main>
+  <div class="logo-badge" aria-label="Logo Grupo Ternova">
+    <img src="https://cdn.prod.website-files.com/66675b9125183e4d2a7a474e/666c90cd19e53c04711fb57f_d0164f8abe71228f954cd1112db78b48_Capa_1.svg" alt="Logo Grupo Ternova" />
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <template id="tpl-tag">
+    <article class="tag-card">
+      <span class="tag-code"></span>
+      <p class="tag-name"></p>
+      <p class="tag-gift"></p>
+      <p class="tag-provider"></p>
+    </article>
+  </template>
+
+  <script>
+    const WINNERS_PER_ROUND = 5;
+    const TAG_BACKGROUNDS = [
+      "url('https://www.fundeu.es/wp-content/uploads/2023/12/reco-navidad-pxhere.png')",
+      "url('https://www.grupocean.com/wp-content/uploads/2023/11/%C3%A1rbol-navidad-Ocean-scaled-2560x1440-optimized.jpg')",
+      "url('https://w0.peakpx.com/wallpaper/654/397/HD-wallpaper-fondos-de-pantalla-de-feliz-navidad.jpg')",
+      "url('https://png.pngtree.com/thumb_back/fh260/background/20231004/pngtree-snowman-christmas-wallpaper-free-download-image_13335244.jpg')",
+      "url('https://wallpapers.com/images/featured/feliz-navidad-2zgcri5bu7jmwfzn.jpg')",
+      "url('https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1576919228236-a097c32a5cd4?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1514897575457-c4db467cf78e?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1512389098783-66b81f86e199?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1481480065853-2bdbab6e5b2b?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1511306404404-ad607bd7c601?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1544552866-d3ed42536cfd?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1512909006721-3d6018887383?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1544273677-1f9a1c0e1d82?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1545048702-79362596cdc9?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1546289882-c2b0692d8e75?w=600&h=400&fit=crop&q=80')",
+      "url('https://images.unsplash.com/photo-1574917670028-53604647318b?w=600&h=400&fit=crop&q=80')"
+    ];
+    const PLANT_LABELS = {
+      ML: 'ML · Merliot',
+      PL: 'PL · Plan de la Laguna',
+      MQH: 'MQH · Maquilishuat',
+      RENOVA: 'Renova · Planta de reciclaje',
+      ADMON: 'Administrativos',
+    };
+
+    const PLANT_EMOJIS = {
+      ML: '🎄',        // Árbol de Navidad
+      PL: '❄️',        // Copo de nieve
+      MQH: '🎁',       // Regalo
+      RENOVA: '⭐',      // Estrella
+      ADMON: '🎅',     // Santa Claus
+    };
+
+    const elements = {
+      selectorList: document.getElementById('plant-selector'),
+      btnSelectAll: document.getElementById('btn-select-all'),
+      btnApplySelection: document.getElementById('btn-apply-selection'),
+      btnLoadData: document.getElementById('btn-load-data'),
+      plantaDisplay: document.getElementById('planta-display'),
+      stageSubtitle: document.getElementById('stage-subtitle'),
+      stageRound: document.getElementById('stage-round'),
+      roundsLeft: document.getElementById('rounds-left'),
+      stagePrizes: document.getElementById('stage-prizes'),
+      globalRound: document.getElementById('global-round'),
+      winnersCount: document.getElementById('winners-count'),
+      winnersGrid: document.getElementById('winners-grid'),
+      timeline: document.getElementById('timeline'),
+      btnNext: document.getElementById('btn-siguiente'),
+      btnBack: document.getElementById('btn-atras'),
+      btnRestart: document.getElementById('btn-restart'),
+      btnFullscreen: document.getElementById('btn-fullscreen'),
+      infoChip: document.getElementById('info-chip'),
+      historialBody: document.getElementById('historial-body'),
+      btnReporte: document.getElementById('btn-reporte'),
+      btnCopiar: document.getElementById('btn-copiar'),
+      toast: document.getElementById('toast'),
+      loading: document.getElementById('loading-screen'),
+    };
+
+    const fileLoader = document.getElementById('file-loader');
+    const template = document.getElementById('tpl-tag');
+
+    const csvUploads = {
+      participantes: null,
+      premios: null,
+    };
+
+    const state = {
+      data: null,
+      selectionOrder: [],
+      selectedIds: new Set(),
+      activeOrder: [],
+      plants: [],
+      currentPlantIndex: 0,
+      rondaGlobal: 0,
+      winnersLog: [],
+      isPlantTransition: false,
+      isViewingPast: false,
+      viewingPlantIndex: 0,
+      viewingRound: 0,
+    };
+
+    const getPlantLabel = (id) => {
+      if (PLANT_LABELS[id]) return PLANT_LABELS[id];
+      if (state.data?.plantas_nombres?.[id]) return state.data.plantas_nombres[id];
+      return id;
+    };
+
+    const secureRandom = (limit) => {
+      if (limit <= 0) return 0;
+      if (window.crypto?.getRandomValues) {
+        const arr = new Uint32Array(1);
+        window.crypto.getRandomValues(arr);
+        return arr[0] % limit;
+      }
+      return Math.floor(Math.random() * limit);
+    };
+
+    const shuffle = (array) => {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i -= 1) {
+        const j = secureRandom(i + 1);
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    };
+
+    // Precargar imágenes de fondo
+    const preloadImages = () => {
+      TAG_BACKGROUNDS.forEach((bgUrl) => {
+        const img = new Image();
+        // Extraer la URL del string url('...')
+        const urlMatch = bgUrl.match(/url\(['"](.+?)['"]\)/);
+        if (urlMatch && urlMatch[1]) {
+          img.src = urlMatch[1];
+        }
+      });
+    };
+
+    const setToast = (message) => {
+      elements.toast.textContent = message;
+      elements.toast.classList.add('visible');
+      clearTimeout(setToast.timer);
+      setToast.timer = setTimeout(() => elements.toast.classList.remove('visible'), 3500);
+    };
+
+    const parseCsvText = (text) => {
+      const lines = text
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter((line) => line.length);
+      if (!lines.length) return null;
+      const headers = lines[0].split(',').map((header) => header.trim());
+      const rows = lines.slice(1).map((line) => {
+        const values = line.split(',').map((value) => value.trim());
+        return headers.reduce((acc, header, index) => {
+          acc[header] = values[index] ?? '';
+          return acc;
+        }, {});
+      });
+      return { headers, rows };
+    };
+
+    const findHeaderName = (headers, key) => {
+      const lowerKey = key.toLowerCase();
+      const exact = headers.find((header) => header.toLowerCase() === lowerKey);
+      if (exact) return exact;
+      return headers.find((header) => header.toLowerCase().includes(lowerKey)) || null;
+    };
+
+    const normalizePlantId = (value) => {
+      const normalized = value?.trim();
+      return normalized && normalized.length ? normalized : 'Sin planta';
+    };
+
+    const buildDataFromCsv = (participantsCsv, prizesCsv) => {
+      if (!participantsCsv || !prizesCsv) return null;
+      const participantsByPlant = {};
+      const prizesByPlant = {};
+      const order = [];
+      const seen = new Set();
+
+      const markPlant = (rawValue) => {
+        const plantId = normalizePlantId(rawValue);
+        if (!seen.has(plantId)) {
+          seen.add(plantId);
+          order.push(plantId);
+        }
+        if (!participantsByPlant[plantId]) participantsByPlant[plantId] = [];
+        if (!prizesByPlant[plantId]) prizesByPlant[plantId] = [];
+        return plantId;
+      };
+
+      const plantaHeaderParticipants = findHeaderName(participantsCsv.headers, 'planta');
+      const codigoHeader = findHeaderName(participantsCsv.headers, 'codigo');
+      const nombreHeader = findHeaderName(participantsCsv.headers, 'nombre');
+
+      if (!plantaHeaderParticipants || !codigoHeader || !nombreHeader) return null;
+
+      participantsCsv.rows.forEach((row) => {
+        const plantId = markPlant(row[plantaHeaderParticipants]);
+        participantsByPlant[plantId].push({
+          codigo: row[codigoHeader] || '',
+          nombre: row[nombreHeader] || '',
+        });
+      });
+
+      const plantaHeaderPremios = findHeaderName(prizesCsv.headers, 'planta');
+      const premioCompletoHeader = findHeaderName(prizesCsv.headers, 'premio_completo') || findHeaderName(prizesCsv.headers, 'premio');
+      const descripcionHeader = findHeaderName(prizesCsv.headers, 'descripcion');
+      const modeloHeader = findHeaderName(prizesCsv.headers, 'modelo');
+      const proveedorHeader = findHeaderName(prizesCsv.headers, 'proveedor');
+
+      if (!plantaHeaderPremios || !premioCompletoHeader) return null;
+
+      prizesCsv.rows.forEach((row) => {
+        const plantId = markPlant(row[plantaHeaderPremios]);
+        prizesByPlant[plantId].push({
+          premio_completo: row[premioCompletoHeader] || row[descripcionHeader] || '',
+          descripcion: row[descripcionHeader] || '',
+          modelo: row[modeloHeader] || '',
+          proveedor: row[proveedorHeader] || '',
+        });
+      });
+
+      const plantasNombres = order.reduce((acc, planta) => {
+        acc[planta] = PLANT_LABELS[planta] || planta;
+        return acc;
+      }, {});
+
+      const resumen = order.reduce((acc, planta) => {
+        acc[planta] = {
+          premios: prizesByPlant[planta]?.length || 0,
+          participantes: participantsByPlant[planta]?.length || 0,
+        };
+        return acc;
+      }, {});
+
+      return {
+        plantas_orden: order,
+        plantas_nombres: plantasNombres,
+        participantes: participantsByPlant,
+        premios: prizesByPlant,
+        resumen,
+      };
+    };
+
+    const applyData = (data, infoText = '', toastText = '') => {
+      state.data = data;
+      state.selectionOrder = [...(data?.plantas_orden || [])];
+      state.selectedIds = new Set(state.selectionOrder);
+      state.activeOrder = [...state.selectionOrder];
+      state.data.plantas_nombres = state.data.plantas_nombres || {};
+      state.selectionOrder.forEach((id) => {
+        state.data.plantas_nombres[id] = getPlantLabel(id);
+      });
+      renderSelector();
+      resetRaffle(true);
+      if (infoText) elements.infoChip.textContent = infoText;
+      if (toastText) setToast(toastText);
+    };
+
+    const tryBuildCsvData = () => {
+      if (!csvUploads.participantes || !csvUploads.premios) return;
+      const data = buildDataFromCsv(csvUploads.participantes, csvUploads.premios);
+      csvUploads.participantes = null;
+      csvUploads.premios = null;
+      if (!data) {
+        setToast('No se pudo reconstruir la rifa desde los CSV. Verifica los encabezados.');
+        return;
+      }
+      applyData(data, 'Datos cargados desde CSV. Ajusta la selección si lo deseas.', 'CSV cargados. Presiona "Mostrar 5 ganadores".');
+    };
+
+    const handleParsedCsv = (parsed, fileName) => {
+      const headersLower = parsed.headers.map((header) => header.toLowerCase());
+      const isParticipants = headersLower.includes('codigo') && headersLower.includes('nombre');
+      const isPremios = headersLower.includes('premio_completo') || headersLower.includes('descripcion');
+      if (isParticipants) {
+        csvUploads.participantes = parsed;
+        setToast(`Participantes cargados desde ${fileName}.`);
+      }
+      if (isPremios) {
+        csvUploads.premios = parsed;
+        setToast(`Premios cargados desde ${fileName}.`);
+      }
+      if (!isParticipants && !isPremios) {
+        setToast(`No se reconoció ${fileName}. Usa los CSV de participantes o premios.`);
+        return;
+      }
+      tryBuildCsvData();
+    };
+
+    const handleFile = async (file) => {
+      const lowerName = file.name.toLowerCase();
+      try {
+        const content = await file.text();
+        if (lowerName.endsWith('.json')) {
+          const parsed = JSON.parse(content);
+          applyData(parsed, 'Datos cargados desde JSON.', 'JSON cargado. Presiona "Mostrar 5 ganadores".');
+          return;
+        }
+        if (lowerName.endsWith('.csv')) {
+          const parsed = parseCsvText(content);
+          if (!parsed) {
+            setToast(`${file.name} parece estar vacío.`);
+            return;
+          }
+          handleParsedCsv(parsed, file.name);
+          return;
+        }
+        setToast('Formato no soportado. Usa JSON o CSV.');
+      } catch (error) {
+        setToast(`No se pudo leer ${file.name}.`);
+      }
+    };
+
+    const handleFileInput = async (files) => {
+      if (!files || !files.length) return;
+      for (const file of files) {
+        await handleFile(file);
+      }
+      if (fileLoader) fileLoader.value = '';
+    };
+
+    const roundsRemaining = (plant) => {
+      if (!plant) return 0;
+      return Math.ceil(plant.premios.length / WINNERS_PER_ROUND);
+    };
+
+    const buildPlantQueue = () => {
+      if (!state.data) return;
+      state.plants = state.activeOrder.map((id) => {
+        const premios = state.data.premios[id] || [];
+        const participantes = state.data.participantes[id] || [];
+        const displayName = getPlantLabel(id);
+        return {
+          id,
+          nombre: displayName,
+          premios: [...premios],
+          totalPremios: premios.length,
+          participantes: shuffle(participantes),
+          totalParticipantes: participantes.length,
+          rondasJugadas: 0,
+        };
+      });
+    };
+
+    const renderSelector = () => {
+      if (!state.data) {
+        elements.selectorList.innerHTML = '<li class="selector-item" style="cursor:default; opacity:0.7;">Carga un archivo CSV o JSON para comenzar.</li>';
+        return;
+      }
+      if (!state.selectionOrder.length) {
+        elements.selectorList.innerHTML = '<li class="selector-item" style="cursor:default; opacity:0.7;">No hay plantas configuradas en el archivo cargado.</li>';
+        return;
+      }
+      elements.selectorList.innerHTML = state.selectionOrder.map((id) => {
+        const nombre = getPlantLabel(id);
+        const premios = (state.data.premios[id] || []).length;
+        const checked = state.selectedIds.has(id) ? 'checked' : '';
+        return `
+          <li class="selector-item" draggable="true" data-id="${id}">
+            <span class="handle" aria-hidden="true">☰</span>
+            <label>
+              <input type="checkbox" data-id="${id}" ${checked} />
+              <div>
+                <span class="name">${nombre}</span>
+                <small>${premios} premios</small>
+              </div>
+            </label>
+          </li>
+        `;
+      }).join('');
+    };
+
+    const renderTimeline = () => {
+      elements.timeline.innerHTML = state.plants.map((plant, index) => {
+        const totalRounds = Math.ceil(plant.totalPremios / WINNERS_PER_ROUND) || 0;
+        const remaining = roundsRemaining(plant);
+        const completed = totalRounds - remaining;
+        const percent = totalRounds === 0 ? 100 : Math.min(100, (completed / totalRounds) * 100);
+        const active = index === state.currentPlantIndex ? 'active' : '';
+        const done = remaining === 0 && totalRounds > 0 ? 'done' : '';
+        return `
+          <article class="timeline-card ${active} ${done}">
+            <strong>${plant.nombre}</strong>
+            <div class="timeline-progress"><div style="width:${percent}%"></div></div>
+            <small>${totalRounds === 0 ? 'Sin premios asignados' : remaining === 0 ? 'Completado' : `${remaining} rondas pendientes`}</small>
+          </article>
+        `;
+      }).join('');
+    };
+
+    const renderWinners = (winners) => {
+      elements.winnersGrid.innerHTML = '';
+      
+      // Mostrar pantalla especial en modo transición
+      if (state.isPlantTransition) {
+        const plant = state.plants[state.currentPlantIndex];
+        if (plant) {
+          const plantEmoji = PLANT_EMOJIS[plant.id] || '🎉';
+          elements.winnersGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; padding: 3rem;">
+              <div style="font-size: 6rem; margin-bottom: 1.5rem;">${plantEmoji}</div>
+              <h2 style="font-size: 3rem; font-weight: 700; margin: 0; text-align: center; line-height: 1.2;">${plant.nombre}</h2>
+              <p style="font-size: 1.3rem; margin-top: 1rem; opacity: 0.9; text-align: center;">${getPlantLabel(plant.id)}</p>
+              <p style="font-size: 1.5rem; margin-top: 1.5rem; font-weight: 600; color: var(--bright-orange);">${plant.totalPremios} premios disponibles</p>
+            </div>
+          `;
+        }
+        return;
+      }
+      
+      if (!winners.length) {
+        elements.winnersGrid.innerHTML = '<p style="grid-column: span 5; text-align:center; opacity:0.7;">Presiona "Mostrar 5 ganadores" para iniciar.</p>';
+        return;
+      }
+      // Crear array de índices disponibles y mezclarlo para esta ronda
+      const availableIndices = Array.from({ length: TAG_BACKGROUNDS.length }, (_, i) => i);
+      const shuffledIndices = shuffle([...availableIndices]);
+      
+      winners.forEach((winner, index) => {
+        const node = template.content.cloneNode(true);
+        const card = node.querySelector('.tag-card');
+        // Usar imágenes sin repetir - tomar directamente del array mezclado
+        card.style.setProperty('--card-image', TAG_BACKGROUNDS[shuffledIndices[index]]);
+        node.querySelector('.tag-code').textContent = winner.codigo;
+        node.querySelector('.tag-name').textContent = winner.nombre;
+        node.querySelector('.tag-gift').textContent = winner.premio;
+        // No mostrar proveedor en las tarjetas
+        elements.winnersGrid.appendChild(node);
+      });
+    };
+
+    const renderHistorial = () => {
+      elements.historialBody.innerHTML = state.winnersLog.map((winner, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${winner.planta}</td>
+          <td>${winner.ronda}</td>
+          <td>${winner.nombre}</td>
+          <td>${winner.codigo}</td>
+          <td>${winner.premio}</td>
+          <td>${winner.codigoPremio || ''}</td>
+          <td>${winner.proveedor || ''}</td>
+        </tr>
+      `).join('');
+    };
+
+    const updateStage = () => {
+      const plant = state.plants[state.currentPlantIndex];
+      if (!plant) {
+        elements.plantaDisplay.textContent = 'Rifa completada';
+        elements.stageSubtitle.textContent = 'Todos los premios fueron asignados.';
+        elements.stageRound.textContent = '-';
+        elements.roundsLeft.textContent = '0';
+        elements.stagePrizes.textContent = '0';
+        elements.btnNext.disabled = true;
+        renderTimeline();
+        return;
+      }
+      
+      if (state.isPlantTransition) {
+        const plantEmoji = PLANT_EMOJIS[plant.id] || '🎉';
+        elements.plantaDisplay.textContent = `${plantEmoji} ${plant.nombre}`;
+        elements.stageSubtitle.textContent = `Preparando ${getPlantLabel(plant.id)} · ${plant.totalPremios} premios disponibles`;
+        elements.stageRound.textContent = '0';
+        elements.roundsLeft.textContent = roundsRemaining(plant);
+        elements.stagePrizes.textContent = plant.premios.length;
+        elements.btnNext.disabled = false;
+        elements.btnNext.textContent = 'Iniciar Sorteo';
+        elements.btnBack.style.display = state.currentPlantIndex > 0 || state.winnersLog.length > 0 ? 'block' : 'none';
+        elements.btnBack.disabled = false;
+        renderWinners([]);
+        renderTimeline();
+        return;
+      }
+      
+      elements.plantaDisplay.textContent = plant.nombre;
+      elements.stageSubtitle.textContent = `${getPlantLabel(plant.id)} · ${plant.totalPremios} premios`;
+      elements.stageRound.textContent = plant.rondasJugadas;
+      elements.roundsLeft.textContent = roundsRemaining(plant);
+      elements.stagePrizes.textContent = plant.premios.length;
+      // No deshabilitar el botón si ya está configurado como "Siguiente Planta"
+      if (elements.btnNext.textContent !== 'Siguiente Planta') {
+        elements.btnNext.disabled = plant.premios.length === 0;
+        elements.btnNext.textContent = state.isViewingPast ? 'Siguiente' : 'Siguiente Ronda';
+      }
+      elements.btnBack.style.display = state.winnersLog.length > 0 ? 'block' : 'none';
+      elements.btnBack.disabled = false;
+      renderTimeline();
+    };
+
+    const advancePlant = () => {
+      state.currentPlantIndex += 1;
+      while (state.currentPlantIndex < state.plants.length && state.plants[state.currentPlantIndex].premios.length === 0) {
+        state.currentPlantIndex += 1;
+      }
+      const plant = state.plants[state.currentPlantIndex];
+      if (plant) {
+        state.isPlantTransition = true;
+        updateStage();
+        setToast(`¡Siguiente planta preparada! Presiona el botón para comenzar.`);
+        elements.btnNext.disabled = false;
+      } else {
+        state.isPlantTransition = false;
+        updateStage();
+      }
+    };
+
+    const drawRound = () => {
+      // Si estamos viendo el pasado, volver al presente
+      if (state.isViewingPast) {
+        state.isViewingPast = false;
+        const plant = state.plants[state.currentPlantIndex];
+        // Mostrar los últimos ganadores de la ronda actual
+        const lastWinners = state.winnersLog.filter(
+          w => w.plantaId === plant.id && w.ronda === plant.rondasJugadas
+        );
+        renderWinners(lastWinners.length > 0 ? lastWinners : []);
+        updateStage();
+        setToast('Volviendo al presente.');
+        return;
+      }
+      
+      // Si estamos en transición, salir del modo transición y ejecutar primera ronda
+      if (state.isPlantTransition) {
+        state.isPlantTransition = false;
+        const plant = state.plants[state.currentPlantIndex];
+        setToast(`¡Comenzamos con ${plant.nombre}!`);
+        // No hacer return aquí, continuar para ejecutar el sorteo
+      }
+      
+      const plant = state.plants[state.currentPlantIndex];
+      if (!plant) {
+        updateStage();
+        return;
+      }
+      if (!plant.premios.length) {
+        advancePlant();
+        return;
+      }
+
+      const winnersInRound = [];
+      const draws = Math.min(WINNERS_PER_ROUND, plant.premios.length, plant.participantes.length);
+      if (draws === 0) {
+        setToast(`No hay participantes disponibles en ${plant.nombre}.`);
+        advancePlant();
+        return;
+      }
+
+      state.rondaGlobal += 1;
+      plant.rondasJugadas += 1;
+
+      for (let i = 0; i < draws; i += 1) {
+        const premio = plant.premios.shift();
+        const participantIndex = secureRandom(plant.participantes.length);
+        const participante = plant.participantes.splice(participantIndex, 1)[0];
+        if (!participante) break;
+        const registro = {
+          planta: getPlantLabel(plant.id),
+          plantaId: plant.id,
+          ronda: plant.rondasJugadas,
+          nombre: participante.nombre,
+          codigo: participante.codigo,
+          premio: premio.premio_completo || premio.descripcion,
+          codigoPremio: premio.modelo || premio.id_premio || premio.premio_completo || '',
+          proveedor: premio.proveedor || '',
+        };
+        winnersInRound.push(registro);
+        state.winnersLog.push(registro);
+      }
+
+      renderWinners(winnersInRound);
+      renderHistorial();
+      elements.globalRound.textContent = state.rondaGlobal;
+      elements.winnersCount.textContent = state.winnersLog.length;
+      
+      if (!plant.premios.length) {
+        setToast(`¡${plant.nombre} finalizó todos sus premios! Presiona "Siguiente Ronda" para continuar.`);
+        elements.btnNext.textContent = 'Siguiente Planta';
+      } else {
+        setToast(`Ronda ${plant.rondasJugadas}: ${winnersInRound.length} premios.`);
+      }
+      
+      updateStage();
+    };
+
+    const goBack = () => {
+      if (!state.winnersLog.length) {
+        setToast('No hay rondas anteriores para mostrar.');
+        return;
+      }
+      
+      state.isViewingPast = true;
+      
+      // Si estamos en transición, volver a la planta anterior
+      if (state.isPlantTransition && state.currentPlantIndex > 0) {
+        const prevPlantIndex = state.currentPlantIndex - 1;
+        const prevPlant = state.plants[prevPlantIndex];
+        
+        // Encontrar los últimos ganadores de la planta anterior
+        const lastWinnersOfPlant = [];
+        for (let i = state.winnersLog.length - 1; i >= 0; i--) {
+          if (state.winnersLog[i].plantaId === prevPlant.id && state.winnersLog[i].ronda === prevPlant.rondasJugadas) {
+            lastWinnersOfPlant.unshift(state.winnersLog[i]);
+          } else if (state.winnersLog[i].plantaId === prevPlant.id && state.winnersLog[i].ronda < prevPlant.rondasJugadas) {
+            break;
+          }
+        }
+        
+        state.viewingPlantIndex = prevPlantIndex;
+        state.viewingRound = prevPlant.rondasJugadas;
+        
+        // Temporalmente actualizar la vista sin cambiar el estado real
+        elements.plantaDisplay.textContent = prevPlant.nombre;
+        elements.stageSubtitle.textContent = `${getPlantLabel(prevPlant.id)} · ${prevPlant.totalPremios} premios`;
+        elements.stageRound.textContent = prevPlant.rondasJugadas;
+        elements.btnNext.textContent = 'Siguiente';
+        elements.btnBack.disabled = false;
+        
+        renderWinners(lastWinnersOfPlant.length > 0 ? lastWinnersOfPlant : []);
+        setToast(`Volviendo a ${prevPlant.nombre}.`);
+        return;
+      }
+      
+      // Si no estamos en transición, mostrar los últimos ganadores de la ronda actual
+      const plant = state.plants[state.currentPlantIndex];
+      if (!plant) return;
+      
+      // Buscar la ronda anterior de la misma planta
+      let targetRound = plant.rondasJugadas - 1;
+      let targetPlantIndex = state.currentPlantIndex;
+      
+      if (targetRound < 1) {
+        // Si no hay rondas anteriores en esta planta, ir a la planta anterior
+        if (state.currentPlantIndex > 0) {
+          targetPlantIndex = state.currentPlantIndex - 1;
+          const prevPlant = state.plants[targetPlantIndex];
+          targetRound = prevPlant.rondasJugadas;
+          
+          // Encontrar los ganadores de la última ronda de la planta anterior
+          const winnersToShow = state.winnersLog.filter(
+            w => w.plantaId === prevPlant.id && w.ronda === targetRound
+          );
+          
+          state.viewingPlantIndex = targetPlantIndex;
+          state.viewingRound = targetRound;
+          
+          elements.plantaDisplay.textContent = prevPlant.nombre;
+          elements.stageSubtitle.textContent = `${getPlantLabel(prevPlant.id)} · ${prevPlant.totalPremios} premios`;
+          elements.stageRound.textContent = targetRound;
+          elements.btnNext.textContent = 'Siguiente';
+          elements.btnBack.disabled = false;
+          
+          renderWinners(winnersToShow);
+          setToast(`Volviendo a ${prevPlant.nombre}, ronda ${targetRound}.`);
+        } else {
+          setToast('Ya estás en el inicio de la rifa.');
+          state.isViewingPast = false;
+        }
+        return;
+      }
+      
+      // Mostrar ganadores de la ronda anterior de la misma planta
+      const winnersToShow = state.winnersLog.filter(
+        w => w.plantaId === plant.id && w.ronda === targetRound
+      );
+      
+      state.viewingPlantIndex = targetPlantIndex;
+      state.viewingRound = targetRound;
+      
+      elements.stageRound.textContent = targetRound;
+      elements.btnNext.textContent = 'Siguiente';
+      elements.btnBack.disabled = false;
+      
+      renderWinners(winnersToShow);
+      setToast(`Mostrando ronda ${targetRound} de ${plant.nombre}.`);
+    };
+
+    const resetRaffle = (silent = false) => {
+      buildPlantQueue();
+      state.currentPlantIndex = 0;
+      state.rondaGlobal = 0;
+      state.winnersLog = [];
+      state.isPlantTransition = true;
+      state.isViewingPast = false;
+      state.viewingPlantIndex = 0;
+      state.viewingRound = 0;
+      renderWinners([]);
+      renderHistorial();
+      elements.globalRound.textContent = '0';
+      elements.winnersCount.textContent = '0';
+      elements.btnNext.disabled = false;
+      updateStage();
+      if (!silent) setToast('Rifa reiniciada con la nueva configuración.');
+    };
+
+    const downloadCsv = () => {
+      if (!state.winnersLog.length) {
+        alert('Aún no hay ganadores registrados.');
+        return;
+      }
+      const header = 'Planta,Ronda,Código,Colaborador,Premio,Código Premio,Proveedor\n';
+      const rows = state.winnersLog.map((w) => [w.planta, w.ronda, w.codigo, w.nombre, w.premio, w.codigoPremio || '', w.proveedor].join(','));
+      const blob = new Blob([header + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'reporte_ganadores.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
+    const copySummary = async () => {
+      if (!state.winnersLog.length) {
+        alert('Aún no hay ganadores registrados.');
+        return;
+      }
+      const texto = state.winnersLog.map((w, idx) => `${idx + 1}. ${w.nombre} (${w.codigo}) - ${w.premio} · ${w.planta}`).join('\n');
+      try {
+        await navigator.clipboard.writeText(texto);
+        setToast('Resumen copiado al portapapeles.');
+      } catch (error) {
+        alert('No se pudo copiar automáticamente, copia manualmente del historial.');
+      }
+    };
+
+    const toggleFullScreen = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => setToast('Tu navegador bloqueó el modo pantalla completa.'));
+      } else {
+        document.exitFullscreen();
+      }
+    };
+
+    const applySelection = () => {
+      const active = state.selectionOrder.filter((id) => state.selectedIds.has(id));
+      if (!active.length) {
+        setToast('Selecciona al menos una planta.');
+        return;
+      }
+      state.activeOrder = active;
+      resetRaffle();
+    };
+
+    const handleSelectorEvents = () => {
+      let dragId = null;
+
+      elements.selectorList.addEventListener('change', (event) => {
+        const checkbox = event.target.closest('input[type="checkbox"]');
+        if (!checkbox) return;
+        const { id } = checkbox.dataset;
+        if (checkbox.checked) state.selectedIds.add(id);
+        else state.selectedIds.delete(id);
+      });
+
+      elements.selectorList.addEventListener('dragstart', (event) => {
+        const item = event.target.closest('li');
+        if (!item) return;
+        dragId = item.dataset.id;
+        item.classList.add('dragging');
+      });
+
+      elements.selectorList.addEventListener('dragend', (event) => {
+        const item = event.target.closest('li');
+        if (item) item.classList.remove('dragging');
+      });
+
+      elements.selectorList.addEventListener('dragover', (event) => {
+        event.preventDefault();
+      });
+
+      elements.selectorList.addEventListener('drop', (event) => {
+        event.preventDefault();
+        const target = event.target.closest('li');
+        if (!target || !dragId) return;
+        const targetId = target.dataset.id;
+        if (dragId === targetId) return;
+        const from = state.selectionOrder.indexOf(dragId);
+        const to = state.selectionOrder.indexOf(targetId);
+        state.selectionOrder.splice(from, 1);
+        state.selectionOrder.splice(to, 0, dragId);
+        renderSelector();
+      });
+    };
+
+    const bootstrap = async () => {
+      try {
+        const response = await fetch(`data/datos_rifa.json?cache=${Date.now()}`);
+        if (!response.ok) throw new Error('No se pudo cargar el JSON');
+        const data = await response.json();
+        applyData(data, 'Se muestran 5 ganadores por ronda · Continúa hasta agotar premios de cada planta.', 'Datos cargados. Configura el orden y presiona "Mostrar 5 ganadores".');
+      } catch (error) {
+        elements.infoChip.textContent = 'No se pudo cargar datos_rifa.json en modo local. Usa el botón "Cargar CSV" para subir tus archivos.';
+        elements.btnNext.disabled = true;
+        setToast('Error al cargar los datos.');
+      } finally {
+        elements.loading.style.display = 'none';
+      }
+    };
+
+    handleSelectorEvents();
+    elements.btnLoadData?.addEventListener('click', () => {
+      if (fileLoader) fileLoader.click();
+    });
+    if (fileLoader) {
+      fileLoader.addEventListener('change', (event) => {
+        handleFileInput(event.target.files);
+      });
+    }
+    elements.btnNext.addEventListener('click', drawRound);
+    elements.btnBack.addEventListener('click', goBack);
+    elements.btnRestart.addEventListener('click', () => resetRaffle());
+    elements.btnReporte.addEventListener('click', downloadCsv);
+    elements.btnCopiar.addEventListener('click', copySummary);
+    elements.btnSelectAll.addEventListener('click', () => {
+      state.selectionOrder.forEach((id) => state.selectedIds.add(id));
+      renderSelector();
+    });
+    elements.btnApplySelection.addEventListener('click', applySelection);
+    elements.btnFullscreen.addEventListener('click', toggleFullScreen);
+    document.addEventListener('fullscreenchange', () => {
+      elements.btnFullscreen.textContent = document.fullscreenElement ? 'Salir de pantalla completa' : 'Pantalla completa';
+    });
+
+    // Precargar imágenes al cargar la página
+    preloadImages();
+
+    // Crear nieve realista
+    const createSnowflakes = () => {
+      const snowLayer = document.querySelector('.snow-layer');
+      if (!snowLayer) return;
+      
+      const snowflakeCount = 100; // Número de copos
+      const snowflakeChars = ['❄', '❅', '❆', '•', '·']; // Diferentes caracteres
+      
+      for (let i = 0; i < snowflakeCount; i++) {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        snowflake.textContent = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+        
+        // Propiedades aleatorias
+        const size = Math.random() * 0.8 + 0.4; // 0.4 a 1.2em
+        const startPosition = Math.random() * 100; // 0 a 100%
+        const startHeight = Math.random() * 100; // 0 a 100vh para distribución completa
+        const duration = Math.random() * 15 + 10; // 10 a 25 segundos
+        const delay = -(Math.random() * duration); // Delay negativo para animación escalonada
+        const drift = (Math.random() - 0.5) * 100; // -50px a 50px
+        
+        // Opacidad y z-index basados en el tamaño para efecto 3D
+        // Copos grandes (>0.8em): más opacos, adelante de todo (z-index 101)
+        // Copos medianos (0.6-0.8em): opacidad media, capa media (z-index 100)
+        // Copos pequeños (<0.6em): menos opacos, atrás de todo (z-index 99)
+        let opacity, zIndex;
+        if (size > 0.8) {
+          opacity = Math.random() * 0.3 + 0.6; // 0.6 a 0.9
+          zIndex = 101; // Adelante de las tarjetas
+        } else if (size > 0.6) {
+          opacity = Math.random() * 0.3 + 0.4; // 0.4 a 0.7
+          zIndex = 100; // Mismo nivel que snow-layer
+        } else {
+          opacity = Math.random() * 0.2 + 0.2; // 0.2 a 0.4
+          zIndex = 99; // Detrás de las tarjetas
+        }
+        
+        snowflake.style.left = `${startPosition}%`;
+        snowflake.style.top = `${startHeight}vh`;
+        snowflake.style.fontSize = `${size}em`;
+        snowflake.style.animationDuration = `${duration}s`;
+        snowflake.style.animationDelay = `${delay}s`;
+        snowflake.style.setProperty('--drift', `${drift}px`);
+        snowflake.style.opacity = opacity;
+        snowflake.style.zIndex = zIndex;
+        
+        snowLayer.appendChild(snowflake);
+      }
+    };
+    
+    createSnowflakes();
+    bootstrap();
+  </script>
+</body>
+</html>

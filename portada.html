@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grupo Ternova · Navidad 2025</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bright-orange: #ef8118;
+      --deep-violet: #2e004f;
+      --night: #0b001f;
+      --snow: #fdfbff;
+      --frost: rgba(255, 255, 255, 0.18);
+      --glass: rgba(12, 0, 35, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat', 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      background: radial-gradient(circle at 15% 20%, #ef8118 0%, #93214e 40%, #2e004f 70%, #0b001f 100%);
+      color: var(--snow);
+      overflow-x: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1544636295-7a50351a5731?auto=format&fit=crop&w=1600&q=60');
+      opacity: 0.08;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .snow-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      overflow: visible;
+      z-index: 100;
+    }
+
+    .snowflake {
+      position: absolute;
+      color: white;
+      font-size: 1em;
+      opacity: 0.8;
+      animation: snowfall linear infinite;
+      text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes snowfall {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(150vh) translateX(var(--drift)) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+      max-width: 900px;
+    }
+
+    .logo-container {
+      animation: fadeInDown 1s ease-out;
+    }
+
+    .logo-container img {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.4));
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .decorations {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .decoration {
+      position: absolute;
+      font-size: 3rem;
+      opacity: 0.6;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .decoration:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+    .decoration:nth-child(2) { top: 25%; right: 15%; animation-delay: 1s; }
+    .decoration:nth-child(3) { bottom: 20%; left: 15%; animation-delay: 2s; }
+    .decoration:nth-child(4) { bottom: 30%; right: 10%; animation-delay: 3s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="snow-layer" aria-hidden="true"></div>
+  
+  <div class="decorations" aria-hidden="true">
+    <div class="decoration">🎄</div>
+    <div class="decoration">🎁</div>
+    <div class="decoration">⭐</div>
+    <div class="decoration">❄️</div>
+  </div>
+
+  <div class="container">
+    <div class="logo-container">
+      <img src="https://cdn.prod.website-files.com/66675b9125183e4d2a7a474e/666c90cd19e53c04711fb57f_d0164f8abe71228f954cd1112db78b48_Capa_1.svg" alt="Logo Grupo Ternova" />
+    </div>
+  </div>
+
+  <script>
+    // Crear nieve realista
+    const createSnowflakes = () => {
+      const snowLayer = document.querySelector('.snow-layer');
+      if (!snowLayer) return;
+      
+      const snowflakeCount = 100;
+      const snowflakeChars = ['❄', '❅', '❆', '•', '·'];
+      
+      for (let i = 0; i < snowflakeCount; i++) {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        snowflake.textContent = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+        
+        const size = Math.random() * 0.8 + 0.4;
+        const startPosition = Math.random() * 100;
+        const startHeight = Math.random() * 100;
+        const duration = Math.random() * 15 + 10;
+        const delay = -(Math.random() * duration);
+        const drift = (Math.random() - 0.5) * 100;
+        
+        let opacity, zIndex;
+        if (size > 0.8) {
+          opacity = Math.random() * 0.3 + 0.6;
+          zIndex = 101;
+        } else if (size > 0.6) {
+          opacity = Math.random() * 0.3 + 0.4;
+          zIndex = 100;
+        } else {
+          opacity = Math.random() * 0.2 + 0.2;
+          zIndex = 99;
+        }
+        
+        snowflake.style.left = `${startPosition}%`;
+        snowflake.style.top = `${startHeight}vh`;
+        snowflake.style.fontSize = `${size}em`;
+        snowflake.style.animationDuration = `${duration}s`;
+        snowflake.style.animationDelay = `${delay}s`;
+        snowflake.style.setProperty('--drift', `${drift}px`);
+        snowflake.style.opacity = opacity;
+        snowflake.style.zIndex = zIndex;
+        
+        snowLayer.appendChild(snowflake);
+      }
+    };
+    
+    createSnowflakes();
+  </script>
+</body>
+</html>
