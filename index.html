@@ -263,9 +263,8 @@
             <small>Columnas: nombre,cantidad</small>
           </div>
           <input type="file" id="csv-premios" accept=".csv" style="display:none" />
-          <div class="template-hint">
-            <span>No tienes el formato?</span>
-            <a href="#" onclick="descargarTemplate('premios');return false;" class="template-btn">Descargar CSV de ejemplo</a>
+          <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+            <button class="btn btn-danger btn-sm" onclick="limpiarPremiosCSV()">Limpiar</button>
           </div>
         </div>
       </div>
@@ -295,9 +294,8 @@
             <small>Columnas: codigo,nombre</small>
           </div>
           <input type="file" id="csv-file" accept=".csv" style="display:none" />
-          <div class="template-hint">
-            <span>No tienes el formato?</span>
-            <a href="#" onclick="descargarTemplate('participantes');return false;" class="template-btn">Descargar CSV de ejemplo</a>
+          <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+            <button class="btn btn-danger btn-sm" onclick="limpiarParticipantesCSV()">Limpiar</button>
           </div>
         </div>
       </div>
@@ -435,6 +433,20 @@
     }
     function setModoParticipantes(modo, btn) {
       activarModo('participantes', modo);
+    }
+
+    function limpiarPremiosCSV() {
+      premios = [];
+      document.getElementById('dz-premios-label').textContent = 'Arrastra tu CSV de premios aquí';
+      document.getElementById('csv-premios').value = '';
+      renderPremios();
+      toast('Premios limpiados');
+    }
+    function limpiarParticipantesCSV() {
+      participantes = [];
+      document.getElementById('dz-label').textContent = 'Arrastra tu CSV aquí';
+      document.getElementById('csv-file').value = '';
+      toast('Participantes limpiados');
     }
 
     // ── Participantes manuales ─────────────────────────────────────
