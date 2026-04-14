@@ -152,13 +152,26 @@
     .metric-card span{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;opacity:.65;margin-bottom:.25rem;}
     .metric-card strong{font-size:1.8rem;font-weight:700;color:#f8b347;}
     .sorteo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.85rem;min-height:120px;margin-bottom:1.5rem;}
-    .winner-card{background:linear-gradient(135deg,rgba(239,129,24,.2),rgba(46,0,79,.65));border:1px solid rgba(239,129,24,.4);border-radius:20px;padding:1.2rem .9rem;text-align:center;animation:pop-in .45s cubic-bezier(.34,1.56,.64,1) both;}
-    .winner-card:nth-child(2){animation-delay:.06s;}.winner-card:nth-child(3){animation-delay:.12s;}.winner-card:nth-child(4){animation-delay:.18s;}.winner-card:nth-child(5){animation-delay:.24s;}
-    @keyframes pop-in{from{transform:scale(.4) translateY(30px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
-    .winner-code{font-size:1.6rem;font-weight:800;color:#f8b347;margin-bottom:.3rem;letter-spacing:.05em;}
-    .winner-name{font-weight:600;font-size:.85rem;line-height:1.35;margin-bottom:.55rem;}
-    .winner-prize{font-size:.75rem;opacity:.9;background:rgba(255,255,255,.12);padding:.25rem .7rem;border-radius:999px;display:inline-block;}
-    .sorteo-controls{display:flex;gap:.7rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap;}
+    /* Winner cards — más grandes */
+    .sorteo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.1rem;min-height:180px;margin-bottom:1.5rem;}
+    .winner-card{background:linear-gradient(135deg,rgba(239,129,24,.22),rgba(46,0,79,.7));border:1px solid rgba(239,129,24,.45);border-radius:24px;padding:1.8rem 1.2rem 1.4rem;text-align:center;animation:pop-in .5s cubic-bezier(.34,1.56,.64,1) both;position:relative;overflow:hidden;}
+    .winner-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(239,129,24,.12),transparent 70%);pointer-events:none;}
+    .winner-card:nth-child(2){animation-delay:.07s;}.winner-card:nth-child(3){animation-delay:.14s;}.winner-card:nth-child(4){animation-delay:.21s;}.winner-card:nth-child(5){animation-delay:.28s;}
+    @keyframes pop-in{from{transform:scale(.3) translateY(40px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+    .winner-code{font-size:2.6rem;font-weight:900;color:#f8b347;margin-bottom:.5rem;letter-spacing:.04em;line-height:1;}
+    .winner-name{font-weight:700;font-size:1rem;line-height:1.4;margin-bottom:.75rem;}
+    .winner-prize{font-size:.8rem;opacity:.95;background:rgba(255,255,255,.13);padding:.35rem .9rem;border-radius:999px;display:inline-flex;align-items:center;gap:.4rem;}
+    /* Slot-machine spinning */
+    .winner-card.spinning{animation:none;}
+    .winner-card.spinning .winner-code{animation:slot-flicker .07s steps(1) infinite;color:rgba(248,179,71,.55);}
+    .winner-card.spinning .winner-name,.winner-card.spinning .winner-prize{opacity:.25;}
+    @keyframes slot-flicker{0%{transform:translateY(-3px);}50%{transform:translateY(3px);}100%{transform:translateY(-3px);}}
+    .winner-card.revealed{animation:pop-in .5s cubic-bezier(.34,1.56,.64,1);}
+    /* Controles */
+    .sorteo-controls{display:flex;gap:.7rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+    .ruleta-toggle-wrap{display:flex;align-items:center;gap:.5rem;font-size:.78rem;opacity:.8;cursor:pointer;user-select:none;padding:.4rem .8rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:999px;transition:all .2s;}
+    .ruleta-toggle-wrap:hover{opacity:1;background:rgba(255,255,255,.1);}
+    .ruleta-toggle-wrap.active{border-color:rgba(239,129,24,.5);background:rgba(239,129,24,.12);opacity:1;}
     .sorteo-done{text-align:center;padding:3rem 1rem;background:linear-gradient(135deg,rgba(80,200,100,.12),rgba(46,0,79,.4));border:1px solid rgba(80,200,100,.25);border-radius:20px;margin-bottom:1.5rem;}
     .sorteo-done h3{font-size:1.5rem;margin-bottom:.5rem;color:#7dea7d;}
     /* Nav sorteo context */
@@ -241,9 +254,15 @@
     <!-- ── Sorteo en Vivo ──────────────────────────── -->
     <section id="sec-sorteo" class="section panel">
       <div class="sorteo-header">
-        <button class="btn btn-secondary btn-sm" onclick="salirSorteo()">← Mis Rifas</button>
+        <button class="btn btn-secondary btn-sm" onclick="salirSorteo()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Mis Rifas
+        </button>
         <h2 class="sorteo-titulo" id="sorteo-titulo">SORTEO EN VIVO</h2>
-        <div style="width:100px;"></div>
+        <button class="btn btn-secondary btn-sm" onclick="toggleFullscreen()" title="Pantalla completa">
+          <svg id="fs-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Pantalla completa
+        </button>
       </div>
       <div class="sorteo-metrics">
         <div class="metric-card"><span>Ronda</span><strong id="s-ronda">0</strong></div>
@@ -253,9 +272,22 @@
       </div>
       <div class="sorteo-grid" id="sorteo-grid"></div>
       <div class="sorteo-controls">
-        <button class="btn btn-primary" id="btn-sortear" onclick="sortearRonda()">Sortear</button>
-        <button class="btn btn-secondary" onclick="reiniciarSorteo()">Reiniciar</button>
-        <button class="btn btn-secondary btn-sm" onclick="exportarGanadores()">Descargar CSV</button>
+        <button class="btn btn-primary" id="btn-sortear" onclick="sortearRonda()" style="font-size:1rem;padding:.75rem 2rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+          Sortear
+        </button>
+        <div class="ruleta-toggle-wrap" id="ruleta-wrap" onclick="toggleRuleta()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Modo Ruleta
+        </div>
+        <button class="btn btn-secondary" onclick="reiniciarSorteo()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+          Reiniciar
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="exportarGanadores()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          CSV
+        </button>
       </div>
       <div class="table-wrap">
         <table>
@@ -880,11 +912,16 @@
 
     // ── Sorteo en vivo ─────────────────────────────────────────────
     var currentRifaId = null;
-    var sorteoPool   = [];   // participantes disponibles (ya sorteados excluidos)
-    var sorteoQueue  = [];   // premios pendientes (plana, expandida por qty)
+    var sorteoPool   = [];
+    var sorteoQueue  = [];
     var sorteoRonda  = 0;
-    var sorteoLog    = [];   // [{codigo, nombre, premio, ronda}]
-    var SORTEO_N = 5;        // ganadores por ronda
+    var sorteoLog    = [];
+    var SORTEO_N     = 5;
+    var ruletaActiva = false;
+    var sorteandoAnim = false;
+
+    // SVG inline para íconos (no emojis)
+    var SVG_GIFT = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;flex-shrink:0"><rect x="3" y="8" width="18" height="14" rx="2"/><line x1="12" y1="8" x2="12" y2="22"/><path d="M12 8C12 8 9 5 6 6s-2 4 0 4h6"/><path d="M12 8C12 8 15 5 18 6s2 4 0 4h-6"/></svg>';
 
     function rifaShuffle(arr) {
       var a = arr.slice();
@@ -896,18 +933,17 @@
     }
 
     function sortearRonda() {
-      if (!sorteoQueue.length || !sorteoPool.length) return;
+      if (sorteandoAnim || !sorteoQueue.length || !sorteoPool.length) return;
       sorteoRonda++;
       var n = Math.min(SORTEO_N, sorteoQueue.length, sorteoPool.length);
       var rondaGanadores = [];
       for (var i = 0; i < n; i++) {
         var p = sorteoPool.shift();
         var premio = sorteoQueue.shift();
-        var g = { codigo: p.codigo, nombre: p.nombre, premio: premio, ronda: sorteoRonda };
-        rondaGanadores.push(g);
-        sorteoLog.push(g);
+        rondaGanadores.push({ codigo: p.codigo, nombre: p.nombre, premio: premio, ronda: sorteoRonda });
+        sorteoLog.push(rondaGanadores[rondaGanadores.length - 1]);
       }
-      // Guardar en localStorage
+      // Guardar en localStorage ya (antes de animación)
       var rifas = getRifas();
       var rifa = rifas.find(function (r) { return r.id === currentRifaId; });
       if (rifa) {
@@ -915,12 +951,87 @@
         if (!sorteoQueue.length) rifa.estado = 'finalizada';
         saveRifas(rifas);
       }
+      if (ruletaActiva) {
+        animarRuleta(rondaGanadores, n);
+      } else {
+        renderSorteoGanadores(rondaGanadores);
+        finalizarRonda();
+      }
+    }
+
+    function animarRuleta(ganadores, n) {
+      sorteandoAnim = true;
+      document.getElementById('btn-sortear').disabled = true;
+      var grid = document.getElementById('sorteo-grid');
+      grid.textContent = '';
+      var codesEls = [];
+      // Crear tarjetas en estado spinning
+      ganadores.forEach(function (g) {
+        var card = el('div', 'winner-card spinning');
+        var codeEl = el('div', 'winner-code', '????');
+        var nameEl = el('div', 'winner-name', '···');
+        var prizeEl = el('div', 'winner-prize', '···');
+        codesEls.push({ codeEl: codeEl, card: card, ganador: g });
+        card.appendChild(codeEl);
+        card.appendChild(nameEl);
+        card.appendChild(prizeEl);
+        grid.appendChild(card);
+      });
+      // Intervalo de números aleatorios
+      var allCodes = sorteoLog.map(function(g){ return g.codigo; })
+        .concat(sorteoPool.slice(0,20).map(function(p){ return p.codigo; }));
+      var spinInterval = setInterval(function () {
+        codesEls.forEach(function (item) {
+          if (item.card.classList.contains('spinning')) {
+            var fake = allCodes.length
+              ? allCodes[Math.floor(Math.random() * allCodes.length)]
+              : String(Math.floor(Math.random() * 9999)).padStart(4, '0');
+            item.codeEl.textContent = fake;
+          }
+        });
+      }, 70);
+      // Revelar cada tarjeta con retraso escalonado
+      codesEls.forEach(function (item, idx) {
+        setTimeout(function () {
+          clearInterval(spinInterval); // solo efectivo al terminar el loop
+          item.codeEl.textContent = item.ganador.codigo;
+          item.card.querySelector('.winner-name').textContent = item.ganador.nombre;
+          var prizeEl = item.card.querySelector('.winner-prize');
+          prizeEl.innerHTML = SVG_GIFT + ' ';
+          prizeEl.appendChild(document.createTextNode(item.ganador.premio));
+          item.card.classList.remove('spinning');
+          item.card.classList.add('revealed');
+          if (idx === codesEls.length - 1) {
+            clearInterval(spinInterval);
+            sorteandoAnim = false;
+            finalizarRonda();
+          }
+        }, 1200 + idx * 500);
+      });
+    }
+
+    function finalizarRonda() {
       renderSorteoMetrics();
-      renderSorteoGanadores(rondaGanadores);
       renderSorteoHistorial();
       renderDashboard();
       document.getElementById('btn-sortear').disabled = !sorteoQueue.length || !sorteoPool.length;
       if (!sorteoQueue.length) toast('¡Rifa finalizada! Todos los premios han sido sorteados.');
+    }
+
+    function toggleRuleta() {
+      ruletaActiva = !ruletaActiva;
+      var wrap = document.getElementById('ruleta-wrap');
+      wrap.classList.toggle('active', ruletaActiva);
+      toast(ruletaActiva ? 'Modo Ruleta activado' : 'Modo Ruleta desactivado');
+    }
+
+    function toggleFullscreen() {
+      var el2 = document.getElementById('sec-sorteo');
+      if (!document.fullscreenElement) {
+        (el2.requestFullscreen || el2.webkitRequestFullscreen || el2.mozRequestFullScreen).call(el2);
+      } else {
+        (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen).call(document);
+      }
     }
 
     function reiniciarSorteo() {
@@ -938,6 +1049,7 @@
 
     function salirSorteo() {
       currentRifaId = null;
+      sorteandoAnim = false;
       renderDashboard();
       showSection('rifas', document.getElementById('tab-rifas'));
     }
@@ -956,7 +1068,7 @@
         var p = el('p', '', sorteoLog.length
           ? 'Haz clic en "Sortear" para continuar.'
           : 'Haz clic en "Sortear" para iniciar el sorteo.');
-        p.style.cssText = 'grid-column:1/-1;text-align:center;opacity:.5;padding:3rem 1rem;';
+        p.style.cssText = 'grid-column:1/-1;text-align:center;opacity:.5;padding:3rem 1rem;font-size:1rem;';
         grid.appendChild(p);
         return;
       }
@@ -964,7 +1076,10 @@
         var card = el('div', 'winner-card');
         card.appendChild(el('div', 'winner-code', g.codigo));
         card.appendChild(el('div', 'winner-name', g.nombre));
-        card.appendChild(el('div', 'winner-prize', '🎁 ' + g.premio));
+        var prize = el('div', 'winner-prize');
+        prize.innerHTML = SVG_GIFT + ' ';
+        prize.appendChild(document.createTextNode(g.premio));
+        card.appendChild(prize);
         grid.appendChild(card);
       });
     }
