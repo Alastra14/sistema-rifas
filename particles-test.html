@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partículas · Test Ternova</title>
+  <style>
+    :root {
+      --orange: #ef8118;
+      --magenta: #93214e;
+      --violet: #2e004f;
+      --night: #0b001f;
+      --amber: #f8b347;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Montserrat", system-ui, sans-serif;
+      background: radial-gradient(circle at 15% 20%, #ef8118 0%, #93214e 40%, #2e004f 70%, #0b001f 100%);
+      color: #fdfbff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    h1 { font-size: 1.1rem; letter-spacing: .15em; opacity: .7; font-weight: 600; }
+
+    /* Canvas ocupa todo el ancho del contenedor */
+    #canvas-wrap {
+      width: min(900px, 100%);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 220px;
+      background: rgba(0,0,0,.28);
+      border-radius: 20px;
+    }
+
+    /* Controles */
+    .controls {
+      display: flex;
+      gap: .8rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      font-size: .75rem;
+      letter-spacing: .06em;
+      opacity: .75;
+      gap: .3rem;
+      align-items: center;
+    }
+    input[type=range] { width: 120px; accent-color: var(--orange); }
+    button {
+      background: linear-gradient(130deg, #ef8118, #f8b347);
+      color: #2e004f;
+      font-family: inherit;
+      font-size: .85rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 999px;
+      padding: .6rem 1.6rem;
+      cursor: pointer;
+      letter-spacing: .06em;
+    }
+    button:hover { filter: brightness(1.1); }
+    .note {
+      font-size: .78rem;
+      opacity: .5;
+      max-width: 540px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* Selector de modo */
+    .tabs { display: flex; gap: .4rem; }
+    .tab {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      color: #fdfbff;
+      font-family: inherit;
+      font-size: .78rem;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: .4rem 1rem;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: rgba(239,129,24,.25);
+      border-color: rgba(239,129,24,.5);
+      color: #f8b347;
+    }
+  </style>
+</head>
+<body>
+  <h1>SISTEMA DE PARTÍCULAS · LABORATORIO</h1>
+
+  <!-- Selector de modo -->
+  <div class="tabs">
+    <button class="tab active" onclick="setMode('fireworks')">Fuegos artificiales</button>
+    <button class="tab" onclick="setMode('stars')">Estrellas flotantes</button>
+    <button class="tab" onclick="setMode('confetti')">Confeti</button>
+    <button class="tab" onclick="setMode('sparkle')">Destellos</button>
+  </div>
+
+  <div id="canvas-wrap">
+    <canvas id="c"></canvas>
+  </div>
+
+  <!-- Controles -->
+  <div class="controls">
+    <label>
+      Cantidad
+      <input type="range" id="sl-count" min="20" max="400" value="120" oninput="applySettings()">
+    </label>
+    <label>
+      Velocidad
+      <input type="range" id="sl-speed" min="1" max="10" value="4" oninput="applySettings()">
+    </label>
+    <label>
+      Tamaño
+      <input type="range" id="sl-size" min="1" max="8" value="3" oninput="applySettings()">
+    </label>
+    <label>
+      Vida útil
+      <input type="range" id="sl-life" min="20" max="200" value="80" oninput="applySettings()">
+    </label>
+    <button onclick="burst()">Explotar</button>
+  </div>
+
+  <p class="note">
+    Prueba los modos y ajusta los sliders. Cuando encuentres el efecto correcto,
+    le digo a Claude que lo integre en el sorteo.
+  </p>
+
+<script>
+// ─── Config ────────────────────────────────────────────
+var COLORS = ['#ef8118','#f8b347','#93214e','#ff6bb5','#c849ff','#fdfbff'];
+var mode   = 'fireworks';
+var COUNT  = 120;
+var SPEED  = 4;
+var SIZE   = 3;
+var LIFE   = 80;
+
+// ─── Canvas setup ──────────────────────────────────────
+var canvas = document.getElementById('c');
+var ctx    = canvas.getContext('2d');
+var DPR    = window.devicePixelRatio || 1;
+var W, H;
+
+function resize() {
+  W = canvas.offsetWidth  * DPR;
+  H = canvas.offsetHeight * DPR;
+  canvas.width  = W;
+  canvas.height = H;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ─── Partículas ────────────────────────────────────────
+var particles = [];
+
+function randColor() { return COLORS[Math.floor(Math.random() * COLORS.length)]; }
+function rand(a, b)  { return a + Math.random() * (b - a); }
+
+// ── Fábrica por modo ───────────────────────────────────
+function spawn(x, y) {
+  if (mode === 'fireworks') {
+    // Explosión radial desde un punto
+    var angle = Math.random() * Math.PI * 2;
+    var spd   = rand(1, SPEED * 1.5);
+    return {
+      x: x || rand(W * .2, W * .8),
+      y: y || rand(H * .2, H * .7),
+      vx: Math.cos(angle) * spd,
+      vy: Math.sin(angle) * spd,
+      r: rand(SIZE * .5, SIZE * 1.5),
+      life: LIFE,
+      maxLife: LIFE,
+      color: randColor(),
+      gravity: 0.06,
+      drag: 0.97,
+    };
+  }
+  if (mode === 'stars') {
+    return {
+      x: rand(0, W),
+      y: rand(0, H),
+      vx: rand(-SPEED * .3, SPEED * .3),
+      vy: rand(-SPEED * .3, SPEED * .3),
+      r: rand(SIZE * .4, SIZE),
+      life: LIFE * 2,
+      maxLife: LIFE * 2,
+      color: randColor(),
+      gravity: 0,
+      drag: 1,
+    };
+  }
+  if (mode === 'confetti') {
+    return {
+      x: rand(0, W),
+      y: -SIZE,
+      vx: rand(-SPEED * .5, SPEED * .5),
+      vy: rand(SPEED * .5, SPEED * 1.5),
+      r: rand(SIZE, SIZE * 2.5),
+      life: LIFE * 3,
+      maxLife: LIFE * 3,
+      color: randColor(),
+      gravity: 0.05,
+      drag: 0.99,
+      isRect: Math.random() > .5,
+      rot: Math.random() * Math.PI * 2,
+      rotV: rand(-.12, .12),
+    };
+  }
+  if (mode === 'sparkle') {
+    var angle2 = Math.random() * Math.PI * 2;
+    return {
+      x: x || rand(0, W),
+      y: y || rand(0, H),
+      vx: Math.cos(angle2) * rand(.3, SPEED),
+      vy: Math.sin(angle2) * rand(.3, SPEED),
+      r: rand(SIZE * .3, SIZE),
+      life: Math.floor(LIFE * .6),
+      maxLife: Math.floor(LIFE * .6),
+      color: randColor(),
+      gravity: -0.02,
+      drag: 0.95,
+    };
+  }
+}
+
+function spawnBurst(cx, cy, n) {
+  n = n || COUNT;
+  for (var i = 0; i < n; i++) particles.push(spawn(cx, cy));
+}
+
+// ─── Loop ──────────────────────────────────────────────
+function update() {
+  // Reponer partículas muertas (continuas)
+  while (particles.length < COUNT) particles.push(spawn());
+
+  // Actualizar
+  particles = particles.filter(function (p) {
+    p.x  += p.vx;
+    p.y  += p.vy;
+    p.vy += p.gravity || 0;
+    p.vx *= p.drag || 1;
+    p.vy *= p.drag || 1;
+    if (p.rot !== undefined) p.rot += p.rotV;
+    p.life--;
+    return p.life > 0;
+  });
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  particles.forEach(function (p) {
+    var alpha = Math.max(0, p.life / p.maxLife);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle   = p.color;
+
+    if (p.isRect) {
+      // Confeti rectangular
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot || 0);
+      ctx.fillRect(-p.r, -p.r * .5, p.r * 2, p.r);
+      ctx.restore();
+    } else {
+      // Círculo / destello
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * DPR * .6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+
+  ctx.globalAlpha = 1;
+}
+
+var raf;
+function loop() {
+  update();
+  draw();
+  raf = requestAnimationFrame(loop);
+}
+loop();
+
+// ─── Eventos ───────────────────────────────────────────
+canvas.addEventListener('click', function (e) {
+  var rect = canvas.getBoundingClientRect();
+  var cx = (e.clientX - rect.left) / rect.width  * W;
+  var cy = (e.clientY - rect.top)  / rect.height * H;
+  spawnBurst(cx, cy, Math.floor(COUNT * .6));
+});
+
+function burst() {
+  spawnBurst(W / 2, H / 2, COUNT);
+}
+
+function applySettings() {
+  COUNT = +document.getElementById('sl-count').value;
+  SPEED = +document.getElementById('sl-speed').value;
+  SIZE  = +document.getElementById('sl-size').value;
+  LIFE  = +document.getElementById('sl-life').value;
+}
+
+function setMode(m) {
+  mode = m;
+  particles = [];
+  document.querySelectorAll('.tab').forEach(function (t) {
+    t.classList.toggle('active', t.textContent.toLowerCase().includes(m === 'fireworks' ? 'fuegos' : m === 'stars' ? 'estrellas' : m === 'confetti' ? 'confeti' : 'destellos'));
+  });
+}
+</script>
+</body>
+</html>

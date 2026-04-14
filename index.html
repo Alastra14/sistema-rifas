@@ -166,17 +166,24 @@
     .winner-code{font-size:2.8rem;font-weight:900;color:#f8b347;margin-bottom:.5rem;letter-spacing:.04em;line-height:1;}
     .winner-name{font-weight:700;font-size:.95rem;line-height:1.4;margin-bottom:.75rem;}
     .winner-prize{font-size:.78rem;opacity:.95;background:rgba(255,255,255,.13);padding:.35rem .9rem;border-radius:999px;display:inline-flex;align-items:center;gap:.4rem;}
-    /* Onda de fondo en el panel del sorteo */
     #sec-sorteo{position:relative;}
-    #wave-canvas{display:none;width:100%;height:90px;margin-top:.5rem;border-radius:16px;opacity:.9;}
-    /* Ocultar tabla, controles y onda nav en fullscreen — mostrar solo métricas+tarjetas */
-    :fullscreen .sorteo-table-wrap,:fullscreen .sorteo-controls,:fullscreen .sorteo-nav{display:none!important;}
-    :-webkit-full-screen .sorteo-table-wrap,:-webkit-full-screen .sorteo-controls,:-webkit-full-screen .sorteo-nav{display:none!important;}
-    :-moz-full-screen .sorteo-table-wrap,:-moz-full-screen .sorteo-controls,:-moz-full-screen .sorteo-nav{display:none!important;}
-    /* En fullscreen, las cards ocupan toda la altura disponible */
-    :fullscreen #sec-sorteo{display:flex;flex-direction:column;height:100vh;background:radial-gradient(circle at 15% 20%,#ef8118 0%,#93214e 40%,#2e004f 70%,#0b001f 100%);padding:1.5rem;}
+    /* En fullscreen: solo se oculta la tabla de historial */
+    :fullscreen .sorteo-table-wrap{display:none!important;}
+    :-webkit-full-screen .sorteo-table-wrap{display:none!important;}
+    :-moz-full-screen .sorteo-table-wrap{display:none!important;}
+    /* Fullscreen: flex-column, las cards ocupan el espacio libre, controles van al fondo */
+    :fullscreen #sec-sorteo{display:flex;flex-direction:column;height:100vh;background:radial-gradient(circle at 15% 20%,#ef8118 0%,#93214e 40%,#2e004f 70%,#0b001f 100%);padding:1rem 1.5rem;}
+    :-webkit-full-screen #sec-sorteo{display:flex;flex-direction:column;height:100vh;background:radial-gradient(circle at 15% 20%,#ef8118 0%,#93214e 40%,#2e004f 70%,#0b001f 100%);padding:1rem 1.5rem;}
     :fullscreen .sorteo-grid{flex:1;min-height:0;}
+    :-webkit-full-screen .sorteo-grid{flex:1;min-height:0;}
     :fullscreen .winner-card{aspect-ratio:9/16;height:100%;}
+    :-webkit-full-screen .winner-card{aspect-ratio:9/16;height:100%;}
+    /* En fullscreen los controles y nav se compactan al fondo */
+    :fullscreen .sorteo-nav{margin:0;padding:.4rem 0 0;}
+    :fullscreen .sorteo-controls{margin:0;padding:.3rem 0 .2rem;justify-content:center;}
+    :fullscreen .sorteo-metrics{flex-shrink:0;}
+    :-webkit-full-screen .sorteo-nav{margin:0;padding:.4rem 0 0;}
+    :-webkit-full-screen .sorteo-controls{margin:0;padding:.3rem 0 .2rem;justify-content:center;}
     /* Nav rondas */
     .sorteo-nav{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.8rem;}
     .sorteo-nav-label{font-size:.8rem;opacity:.6;text-align:center;flex:1;}
@@ -316,7 +323,6 @@
           CSV
         </button>
       </div>
-      <canvas id="wave-canvas"></canvas>
       <div class="sorteo-table-wrap table-wrap" style="margin-top:1rem;">
         <table>
           <thead><tr><th>#</th><th>Código</th><th>Nombre</th><th>Premio</th><th>Ronda</th></tr></thead>
@@ -914,7 +920,6 @@
       document.getElementById('btn-sortear').disabled = !sorteoQueue.length || !sorteoPool.length;
       if (sorteoLog.length) toast('Retomando sorteo · ' + sorteoLog.length + ' ganadores previos');
       showSection('sorteo', null);
-      startWave();
     }
 
     function eliminarRifa(id) {
@@ -1118,79 +1123,10 @@
       }
     }
 
-    // ── Animación de onda (estilo Gemini) ─────────────────────────
-    var waveRAF = null;
-    var waveT   = 0;
-    var WAVE_COLORS = [
-      { r: 239, g: 129, b:  24, a: 0.55 },  // naranja Ternova
-      { r: 147, g:  33, b:  78, a: 0.45 },  // magenta Ternova
-      { r:  46, g:   0, b:  79, a: 0.35 },  // violeta Ternova
-      { r: 248, g: 179, b:  71, a: 0.30 },  // ámbar suave
-    ];
-
-    function startWave() {
-      var canvas = document.getElementById('wave-canvas');
-      if (!canvas) return;
-      canvas.style.display = 'block';
-      var ctx = canvas.getContext('2d');
-      if (waveRAF) cancelAnimationFrame(waveRAF);
-
-      function resize() {
-        canvas.width  = canvas.offsetWidth  * (window.devicePixelRatio || 1);
-        canvas.height = canvas.offsetHeight * (window.devicePixelRatio || 1);
-      }
-      resize();
-      window.addEventListener('resize', resize);
-
-      function draw() {
-        var W = canvas.width, H = canvas.height;
-        ctx.clearRect(0, 0, W, H);
-
-        WAVE_COLORS.forEach(function (col, wi) {
-          ctx.beginPath();
-          var amp   = H * (0.22 + wi * 0.06);
-          var freq  = 0.008 + wi * 0.003;
-          var speed = 0.022 + wi * 0.008;
-          var phase = wi * Math.PI * 0.6;
-
-          for (var x = 0; x <= W; x += 2) {
-            var y = H / 2
-              + Math.sin(x * freq + waveT * speed + phase) * amp
-              + Math.sin(x * freq * 1.7 + waveT * speed * 1.3 + phase) * amp * 0.4;
-            if (x === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-          }
-
-          ctx.lineTo(W, H);
-          ctx.lineTo(0, H);
-          ctx.closePath();
-          ctx.fillStyle = 'rgba(' + col.r + ',' + col.g + ',' + col.b + ',' + col.a + ')';
-          ctx.fill();
-        });
-
-        waveT += 1;
-        waveRAF = requestAnimationFrame(draw);
-      }
-
-      draw();
-    }
-
-    function stopWave() {
-      if (waveRAF) { cancelAnimationFrame(waveRAF); waveRAF = null; }
-      var canvas = document.getElementById('wave-canvas');
-      if (canvas) {
-        var ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.style.display = 'none';
-      }
-    }
-    // ──────────────────────────────────────────────────────────────
-
     function salirSorteo() {
       currentRifaId = null;
       sorteandoAnim = false;
       viewRonda = null;
-      stopWave();
       renderDashboard();
       showSection('rifas', document.getElementById('tab-rifas'));
     }
