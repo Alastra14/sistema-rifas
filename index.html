@@ -36,6 +36,7 @@
     .nav-btn.primary:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(239,129,24,.45);}
     /* Layout */
     main{width:min(1200px,calc(100% - 2rem));margin:0 auto;padding:2.5rem 0 6rem;position:relative;z-index:5;}
+    body.in-sorteo main{width:min(92vw,2000px);}
     /* Hero */
     .hero{text-align:center;margin-bottom:2.5rem;padding-top:.5rem;}
     .hero img{width:180px;margin-bottom:1rem;filter:drop-shadow(0 12px 20px rgba(0,0,0,.45));}
@@ -158,17 +159,24 @@
     .sorteo-grid[data-cols="3"]{max-width:980px;margin-left:auto;margin-right:auto;}
     @media(max-width:700px){.sorteo-grid{grid-template-columns:repeat(2,1fr)!important;max-width:none!important;}}
     @media(max-width:420px){.sorteo-grid{grid-template-columns:1fr!important;}}
-    .winner-card{background:linear-gradient(135deg,rgba(239,129,24,.22),rgba(46,0,79,.7));border:1px solid rgba(239,129,24,.45);border-radius:24px;padding:2rem 1rem 1.6rem;text-align:center;animation:pop-in .5s cubic-bezier(.34,1.56,.64,1) both;position:relative;overflow:hidden;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    .winner-card{background:linear-gradient(160deg,rgba(239,129,24,.28) 0%,rgba(147,33,78,.45) 50%,rgba(46,0,79,.85) 100%);border:1px solid rgba(239,129,24,.45);border-radius:24px;padding:2rem 1rem 1.6rem;text-align:center;animation:pop-in .5s cubic-bezier(.34,1.56,.64,1) both;position:relative;overflow:hidden;aspect-ratio:9/16;display:flex;flex-direction:column;align-items:center;justify-content:center;}
     .winner-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(239,129,24,.12),transparent 70%);pointer-events:none;}
     .winner-card:nth-child(2){animation-delay:.07s;}.winner-card:nth-child(3){animation-delay:.14s;}.winner-card:nth-child(4){animation-delay:.21s;}.winner-card:nth-child(5){animation-delay:.28s;}
     @keyframes pop-in{from{transform:scale(.3) translateY(40px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
     .winner-code{font-size:2.8rem;font-weight:900;color:#f8b347;margin-bottom:.5rem;letter-spacing:.04em;line-height:1;}
     .winner-name{font-weight:700;font-size:.95rem;line-height:1.4;margin-bottom:.75rem;}
     .winner-prize{font-size:.78rem;opacity:.95;background:rgba(255,255,255,.13);padding:.35rem .9rem;border-radius:999px;display:inline-flex;align-items:center;gap:.4rem;}
-    /* Ocultar tabla y controles en fullscreen */
-    :fullscreen .sorteo-table-wrap,:fullscreen .sorteo-controls{display:none!important;}
-    :-webkit-full-screen .sorteo-table-wrap,:-webkit-full-screen .sorteo-controls{display:none!important;}
-    :-moz-full-screen .sorteo-table-wrap,:-moz-full-screen .sorteo-controls{display:none!important;}
+    /* Onda de fondo en el panel del sorteo */
+    #sec-sorteo{position:relative;}
+    #wave-canvas{display:none;width:100%;height:90px;margin-top:.5rem;border-radius:16px;opacity:.9;}
+    /* Ocultar tabla, controles y onda nav en fullscreen — mostrar solo métricas+tarjetas */
+    :fullscreen .sorteo-table-wrap,:fullscreen .sorteo-controls,:fullscreen .sorteo-nav{display:none!important;}
+    :-webkit-full-screen .sorteo-table-wrap,:-webkit-full-screen .sorteo-controls,:-webkit-full-screen .sorteo-nav{display:none!important;}
+    :-moz-full-screen .sorteo-table-wrap,:-moz-full-screen .sorteo-controls,:-moz-full-screen .sorteo-nav{display:none!important;}
+    /* En fullscreen, las cards ocupan toda la altura disponible */
+    :fullscreen #sec-sorteo{display:flex;flex-direction:column;height:100vh;background:radial-gradient(circle at 15% 20%,#ef8118 0%,#93214e 40%,#2e004f 70%,#0b001f 100%);padding:1.5rem;}
+    :fullscreen .sorteo-grid{flex:1;min-height:0;}
+    :fullscreen .winner-card{aspect-ratio:9/16;height:100%;}
     /* Nav rondas */
     .sorteo-nav{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.8rem;}
     .sorteo-nav-label{font-size:.8rem;opacity:.6;text-align:center;flex:1;}
@@ -308,7 +316,8 @@
           CSV
         </button>
       </div>
-      <div class="sorteo-table-wrap table-wrap">
+      <canvas id="wave-canvas"></canvas>
+      <div class="sorteo-table-wrap table-wrap" style="margin-top:1rem;">
         <table>
           <thead><tr><th>#</th><th>Código</th><th>Nombre</th><th>Premio</th><th>Ronda</th></tr></thead>
           <tbody id="sorteo-hist-body"></tbody>
@@ -601,9 +610,8 @@
 
     // ── CSV de premios ─────────────────────────────────────────────
     function procesarCSVPremios(file) {
-      var reader = new FileReader();
-      reader.onload = function (ev) {
-        var lines = ev.target.result.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+      leerArchivoCSV(file, function (texto) {
+        var lines = texto.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
         var sep = detectDelimiter(lines[0] || '');
         var nuevos = 0;
         lines.forEach(function (line, idx) {
@@ -618,8 +626,7 @@
         document.getElementById('dz-premios-label').textContent = '+ ' + nuevos + ' premios cargados (' + premios.length + ' total)';
         renderPremios();
         toast(nuevos + ' premios cargados desde ' + file.name);
-      };
-      reader.readAsText(file, 'UTF-8');
+      });
     }
 
     document.getElementById('csv-premios').addEventListener('change', function (e) {
@@ -667,8 +674,24 @@
     }
 
     // ── CSV ────────────────────────────────────────────────────────
+    // Lee archivo con auto-detección de encoding UTF-8 / Latin-1 (para ñ y tildes)
+    function leerArchivoCSV(file, callback) {
+      var r = new FileReader();
+      r.onload = function (ev) {
+        var texto = ev.target.result;
+        if (texto.indexOf('\uFFFD') !== -1) {
+          // Hay caracteres de reemplazo → reintentar como Latin-1
+          var r2 = new FileReader();
+          r2.onload = function (ev2) { callback(ev2.target.result); };
+          r2.readAsText(file, 'ISO-8859-1');
+        } else {
+          callback(texto);
+        }
+      };
+      r.readAsText(file, 'UTF-8');
+    }
+
     function detectDelimiter(firstLine) {
-      // Auto-detecta: ; tiene prioridad si aparece, sino usa ,
       return firstLine.indexOf(';') !== -1 ? ';' : ',';
     }
 
@@ -685,10 +708,9 @@
     }
 
     function procesarCSV(file) {
-      var reader = new FileReader();
-      reader.onload = function (ev) {
+      leerArchivoCSV(file, function (texto) {
         participantes = [];
-        var lines = ev.target.result.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+        var lines = texto.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
         var sep = detectDelimiter(lines[0] || '');
         lines.forEach(function (line, idx) {
           if (idx === 0 && /codigo/i.test(line)) return;
@@ -698,10 +720,9 @@
             if (c && n) participantes.push({ codigo: c, nombre: n });
           }
         });
-        document.getElementById('dz-label').textContent = '✅ ' + participantes.length + ' participantes cargados';
+        document.getElementById('dz-label').textContent = participantes.length + ' participantes cargados';
         toast(participantes.length + ' participantes cargados');
-      };
-      reader.readAsText(file, 'UTF-8');
+      });
     }
 
     document.getElementById('csv-file').addEventListener('change', function (e) {
@@ -893,6 +914,7 @@
       document.getElementById('btn-sortear').disabled = !sorteoQueue.length || !sorteoPool.length;
       if (sorteoLog.length) toast('Retomando sorteo · ' + sorteoLog.length + ' ganadores previos');
       showSection('sorteo', null);
+      startWave();
     }
 
     function eliminarRifa(id) {
@@ -1096,10 +1118,79 @@
       }
     }
 
+    // ── Animación de onda (estilo Gemini) ─────────────────────────
+    var waveRAF = null;
+    var waveT   = 0;
+    var WAVE_COLORS = [
+      { r: 239, g: 129, b:  24, a: 0.55 },  // naranja Ternova
+      { r: 147, g:  33, b:  78, a: 0.45 },  // magenta Ternova
+      { r:  46, g:   0, b:  79, a: 0.35 },  // violeta Ternova
+      { r: 248, g: 179, b:  71, a: 0.30 },  // ámbar suave
+    ];
+
+    function startWave() {
+      var canvas = document.getElementById('wave-canvas');
+      if (!canvas) return;
+      canvas.style.display = 'block';
+      var ctx = canvas.getContext('2d');
+      if (waveRAF) cancelAnimationFrame(waveRAF);
+
+      function resize() {
+        canvas.width  = canvas.offsetWidth  * (window.devicePixelRatio || 1);
+        canvas.height = canvas.offsetHeight * (window.devicePixelRatio || 1);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function draw() {
+        var W = canvas.width, H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        WAVE_COLORS.forEach(function (col, wi) {
+          ctx.beginPath();
+          var amp   = H * (0.22 + wi * 0.06);
+          var freq  = 0.008 + wi * 0.003;
+          var speed = 0.022 + wi * 0.008;
+          var phase = wi * Math.PI * 0.6;
+
+          for (var x = 0; x <= W; x += 2) {
+            var y = H / 2
+              + Math.sin(x * freq + waveT * speed + phase) * amp
+              + Math.sin(x * freq * 1.7 + waveT * speed * 1.3 + phase) * amp * 0.4;
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+
+          ctx.lineTo(W, H);
+          ctx.lineTo(0, H);
+          ctx.closePath();
+          ctx.fillStyle = 'rgba(' + col.r + ',' + col.g + ',' + col.b + ',' + col.a + ')';
+          ctx.fill();
+        });
+
+        waveT += 1;
+        waveRAF = requestAnimationFrame(draw);
+      }
+
+      draw();
+    }
+
+    function stopWave() {
+      if (waveRAF) { cancelAnimationFrame(waveRAF); waveRAF = null; }
+      var canvas = document.getElementById('wave-canvas');
+      if (canvas) {
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.style.display = 'none';
+      }
+    }
+    // ──────────────────────────────────────────────────────────────
+
     function salirSorteo() {
       currentRifaId = null;
       sorteandoAnim = false;
       viewRonda = null;
+      stopWave();
       renderDashboard();
       showSection('rifas', document.getElementById('tab-rifas'));
     }
