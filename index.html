@@ -15,7 +15,7 @@
     .xmas-only{display:none!important;}
     body.xmas-mode .xmas-only{display:block!important;}
     .snow-layer{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:100;overflow:hidden;}
-    .snowflake{position:absolute;color:white;opacity:0;animation:snowfall linear infinite;}
+    .snowflake{position:absolute;opacity:0;animation:snowfall linear infinite;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.8);}
     @keyframes snowfall{0%{transform:translateY(-60px) translateX(0) rotate(0deg);opacity:0;}10%{opacity:.8;}90%{opacity:.7;}100%{transform:translateY(110vh) translateX(var(--drift,0px)) rotate(360deg);opacity:0;}}
     .light-string{position:fixed;top:0;left:0;width:100%;pointer-events:none;z-index:4;overflow:hidden;}
     .lights-bar{display:flex;gap:20px;padding:10px 24px;flex-wrap:wrap;}
@@ -115,6 +115,19 @@
     .premio-item .del-btn:hover{color:#ff6666;}
     .add-premio{display:flex;gap:.5rem;}
     .add-premio input.qty{flex:0 0 72px;}
+    /* Mode tabs (Manual / CSV) */
+    .mode-tabs{display:flex;gap:.4rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap;}
+    .mode-tab{border:none;border-radius:999px;padding:.32rem .85rem;font-family:inherit;font-size:.74rem;font-weight:600;cursor:pointer;background:rgba(255,255,255,.08);color:var(--snow);border:1px solid rgba(255,255,255,.14);transition:all .2s;}
+    .mode-tab:hover{background:rgba(255,255,255,.15);}
+    .mode-tab.active{background:rgba(239,129,24,.22);border-color:rgba(239,129,24,.5);color:#f8b347;}
+    .mode-tab-link{font-size:.72rem;opacity:.5;color:var(--snow);text-decoration:none;margin-left:auto;transition:opacity .2s;}
+    .mode-tab-link:hover{opacity:.9;text-decoration:underline;}
+    .mode-panel{display:none;}
+    .mode-panel.active{display:block;}
+    /* Persona list (entrada manual de participantes) */
+    .persona-list{display:flex;flex-direction:column;gap:.45rem;margin-bottom:.7rem;max-height:160px;overflow-y:auto;}
+    .add-persona{display:flex;gap:.5rem;}
+    .add-persona input.code{flex:0 0 90px;}
     /* Drop zone */
     .drop-zone{border:2px dashed rgba(255,255,255,.22);border-radius:14px;padding:1.4rem;text-align:center;cursor:pointer;transition:all .2s;font-size:.86rem;opacity:.8;}
     .drop-zone:hover,.drop-zone.drag-over{border-color:var(--bright-orange);background:rgba(239,129,24,.07);opacity:1;}
@@ -221,23 +234,60 @@
         <label>Fecha del evento</label>
         <input type="date" id="input-fecha" />
       </div>
+      <!-- Premios: Manual + CSV -->
       <div class="field">
         <label>Premios</label>
-        <div class="premio-list" id="premio-list"></div>
-        <div class="add-premio">
-          <input type="text"   id="inp-premio-nombre" placeholder="Nombre del premio" />
-          <input type="number" id="inp-premio-qty" class="qty" placeholder="Qty" min="1" value="1" />
-          <button class="btn btn-secondary btn-sm" onclick="agregarPremio()">+</button>
+        <div class="mode-tabs">
+          <button class="mode-tab active" onclick="setModoPremios('manual',this)">Manual</button>
+          <button class="mode-tab"        onclick="setModoPremios('csv',this)">Cargar CSV</button>
+          <a class="mode-tab-link" href="#" onclick="descargarTemplate('premios');return false;">Descargar plantilla</a>
+        </div>
+        <!-- Panel manual -->
+        <div id="premios-manual" class="mode-panel active">
+          <div class="premio-list" id="premio-list"></div>
+          <div class="add-premio">
+            <input type="text"   id="inp-premio-nombre" placeholder="Nombre del premio" />
+            <input type="number" id="inp-premio-qty" class="qty" placeholder="Qty" min="1" value="1" />
+            <button class="btn btn-secondary btn-sm" onclick="agregarPremio()">+</button>
+          </div>
+        </div>
+        <!-- Panel CSV -->
+        <div id="premios-csv" class="mode-panel">
+          <div class="drop-zone" id="dz-premios" onclick="document.getElementById('csv-premios').click()">
+            <span class="dz-icon">+</span>
+            <span id="dz-premios-label">Arrastra tu CSV de premios aquí</span><br>
+            <small>Columnas: nombre,cantidad</small>
+          </div>
+          <input type="file" id="csv-premios" accept=".csv" style="display:none" />
         </div>
       </div>
+
+      <!-- Participantes: Manual + CSV -->
       <div class="field">
-        <label>Participantes (CSV)</label>
-        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('csv-file').click()">
-          <span class="dz-icon">📄</span>
-          <span id="dz-label">Arrastra tu CSV o haz clic aquí</span><br>
-          <small>Columnas requeridas: codigo,nombre</small>
+        <label>Participantes</label>
+        <div class="mode-tabs">
+          <button class="mode-tab active" onclick="setModoParticipantes('manual',this)">Manual</button>
+          <button class="mode-tab"        onclick="setModoParticipantes('csv',this)">Cargar CSV</button>
+          <a class="mode-tab-link" href="#" onclick="descargarTemplate('participantes');return false;">Descargar plantilla</a>
         </div>
-        <input type="file" id="csv-file" accept=".csv" style="display:none" />
+        <!-- Panel manual -->
+        <div id="participantes-manual" class="mode-panel active">
+          <div class="persona-list" id="persona-list"></div>
+          <div class="add-persona">
+            <input type="text" id="inp-persona-codigo" class="code" placeholder="Código" />
+            <input type="text" id="inp-persona-nombre" placeholder="Nombre completo" />
+            <button class="btn btn-secondary btn-sm" onclick="agregarPersona()">+</button>
+          </div>
+        </div>
+        <!-- Panel CSV -->
+        <div id="participantes-csv" class="mode-panel">
+          <div class="drop-zone" id="drop-zone" onclick="document.getElementById('csv-file').click()">
+            <span class="dz-icon">+</span>
+            <span id="dz-label">Arrastra tu CSV aquí</span><br>
+            <small>Columnas: codigo,nombre</small>
+          </div>
+          <input type="file" id="csv-file" accept=".csv" style="display:none" />
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
@@ -259,13 +309,12 @@
         document.getElementById('hero-sub').textContent =
           'Navidad ' + new Date().getFullYear() + ' · Grupo Ternova · Rifa interplanta 100% transparente';
         var layer = document.getElementById('snow-layer');
-        var FLAKES = ['❄', '❅', '❆', '✦', '·', '✶'];
-        for (var i = 0; i < 38; i++) {
+        for (var i = 0; i < 45; i++) {
           var sf = document.createElement('span');
           sf.className = 'snowflake';
-          sf.textContent = FLAKES[Math.floor(Math.random() * FLAKES.length)];
           sf.style.left = (Math.random() * 100) + 'vw';
-          sf.style.fontSize = (0.6 + Math.random() * 1.2) + 'rem';
+          sf.style.width  = (3 + Math.random() * 4) + 'px';
+          sf.style.height = sf.style.width;
           sf.style.setProperty('--drift', ((Math.random() - 0.5) * 90) + 'px');
           sf.style.animationDuration = (7 + Math.random() * 12) + 's';
           sf.style.animationDelay = (Math.random() * 12) + 's';
@@ -303,8 +352,12 @@
       premios = []; participantes = [];
       document.getElementById('input-nombre').value = '';
       document.getElementById('input-fecha').value = new Date().toISOString().slice(0, 10);
-      document.getElementById('dz-label').textContent = 'Arrastra tu CSV o haz clic aquí';
+      document.getElementById('dz-label').textContent = 'Arrastra tu CSV aquí';
+      document.getElementById('dz-premios-label').textContent = 'Arrastra tu CSV de premios aquí';
+      activarModo('premios', 'manual');
+      activarModo('participantes', 'manual');
       renderPremios();
+      renderParticipantes();
       document.getElementById('modal-overlay').classList.add('open');
       setTimeout(function () { document.getElementById('input-nombre').focus(); }, 80);
     }
@@ -349,6 +402,118 @@
     document.getElementById('inp-premio-nombre').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { e.preventDefault(); agregarPremio(); }
     });
+
+    // ── Tabs de modo (Manual / CSV) ────────────────────────────────
+    function activarModo(grupo, modo) {
+      // Paneles
+      document.getElementById(grupo + '-manual').classList.toggle('active', modo === 'manual');
+      document.getElementById(grupo + '-csv').classList.toggle('active', modo === 'csv');
+      // Botones de tab — busca dentro del field que contiene el panel del grupo
+      var panel = document.getElementById(grupo + '-manual');
+      if (panel) {
+        var tabs = panel.parentElement.querySelectorAll('.mode-tab');
+        tabs.forEach(function (t) {
+          t.classList.toggle('active', t.textContent.trim() === (modo === 'manual' ? 'Manual' : 'Cargar CSV'));
+        });
+      }
+    }
+
+    function setModoPremios(modo, btn) {
+      activarModo('premios', modo);
+    }
+    function setModoParticipantes(modo, btn) {
+      activarModo('participantes', modo);
+    }
+
+    // ── Participantes manuales ─────────────────────────────────────
+    function agregarPersona() {
+      var codigo = document.getElementById('inp-persona-codigo').value.trim();
+      var nombre = document.getElementById('inp-persona-nombre').value.trim();
+      if (!codigo || !nombre) { toast('Ingresa código y nombre'); return; }
+      if (participantes.some(function (p) { return p.codigo === codigo; })) {
+        toast('Ya existe un participante con ese código'); return;
+      }
+      participantes.push({ codigo: codigo, nombre: nombre });
+      document.getElementById('inp-persona-codigo').value = '';
+      document.getElementById('inp-persona-nombre').value = '';
+      document.getElementById('inp-persona-codigo').focus();
+      renderParticipantes();
+    }
+
+    function renderParticipantes() {
+      var list = document.getElementById('persona-list');
+      list.textContent = '';
+      participantes.forEach(function (p, i) {
+        var item = document.createElement('div');
+        item.className = 'premio-item';
+        var txt = document.createElement('span');
+        txt.textContent = p.codigo + ' — ' + p.nombre;
+        var btn = document.createElement('button');
+        btn.className = 'del-btn';
+        btn.textContent = '✕';
+        btn.title = 'Eliminar';
+        btn.addEventListener('click', (function (idx) {
+          return function () { participantes.splice(idx, 1); renderParticipantes(); };
+        })(i));
+        item.appendChild(txt);
+        item.appendChild(btn);
+        list.appendChild(item);
+      });
+    }
+
+    document.getElementById('inp-persona-nombre').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); agregarPersona(); }
+    });
+
+    // ── CSV de premios ─────────────────────────────────────────────
+    function procesarCSVPremios(file) {
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        var lines = ev.target.result.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+        var nuevos = 0;
+        lines.forEach(function (line, idx) {
+          if (idx === 0 && /nombre/i.test(line)) return;
+          var parts = parseCSVLine(line);
+          if (parts.length >= 2) {
+            var nombre = parts[0].trim();
+            var qty = parseInt(parts[1]) || 1;
+            if (nombre) { premios.push({ nombre: nombre, qty: qty }); nuevos++; }
+          }
+        });
+        document.getElementById('dz-premios-label').textContent = '+ ' + nuevos + ' premios cargados (' + premios.length + ' total)';
+        renderPremios();
+        toast(nuevos + ' premios cargados desde ' + file.name);
+      };
+      reader.readAsText(file, 'UTF-8');
+    }
+
+    document.getElementById('csv-premios').addEventListener('change', function (e) {
+      if (e.target.files[0]) procesarCSVPremios(e.target.files[0]);
+    });
+    var dzP = document.getElementById('dz-premios');
+    dzP.addEventListener('dragover', function (e) { e.preventDefault(); dzP.classList.add('drag-over'); });
+    dzP.addEventListener('dragleave', function () { dzP.classList.remove('drag-over'); });
+    dzP.addEventListener('drop', function (e) {
+      e.preventDefault(); dzP.classList.remove('drag-over');
+      var f = e.dataTransfer.files[0];
+      if (f && f.name.endsWith('.csv')) procesarCSVPremios(f);
+    });
+
+    // ── Descarga de plantillas ─────────────────────────────────────
+    function descargarTemplate(tipo) {
+      var content, filename;
+      if (tipo === 'premios') {
+        content = 'nombre,cantidad\nBicicleta,1\nVale de supermercado,3\nSmartphone,1';
+        filename = 'plantilla_premios.csv';
+      } else {
+        content = 'codigo,nombre\n1001,Juan Pérez\n1002,María García\n1003,Carlos López';
+        filename = 'plantilla_participantes.csv';
+      }
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }));
+      a.download = filename;
+      a.click();
+    }
 
     // ── CSV ────────────────────────────────────────────────────────
     function parseCSVLine(line) {
@@ -400,7 +565,7 @@
       var fecha  = document.getElementById('input-fecha').value;
       if (!nombre)               { toast('Ingresa un nombre para la rifa'); return; }
       if (!premios.length)       { toast('Agrega al menos un premio'); return; }
-      if (!participantes.length) { toast('Carga el CSV de participantes'); return; }
+      if (!participantes.length) { toast('Agrega al menos un participante (manual o CSV)'); return; }
       var rifa = {
         id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2),
         nombre: nombre, fecha: fecha,
