@@ -494,10 +494,11 @@
       var reader = new FileReader();
       reader.onload = function (ev) {
         var lines = ev.target.result.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+        var sep = detectDelimiter(lines[0] || '');
         var nuevos = 0;
         lines.forEach(function (line, idx) {
           if (idx === 0 && /nombre/i.test(line)) return;
-          var parts = parseCSVLine(line);
+          var parts = parseCSVLine(line, sep);
           if (parts.length >= 2) {
             var nombre = parts[0].trim();
             var qty = parseInt(parts[1]) || 1;
@@ -556,12 +557,17 @@
     }
 
     // ── CSV ────────────────────────────────────────────────────────
-    function parseCSVLine(line) {
+    function detectDelimiter(firstLine) {
+      // Auto-detecta: ; tiene prioridad si aparece, sino usa ,
+      return firstLine.indexOf(';') !== -1 ? ';' : ',';
+    }
+
+    function parseCSVLine(line, sep) {
       var res = [], cur = '', inQ = false;
       for (var k = 0; k < line.length; k++) {
         var ch = line[k];
         if (ch === '"') { inQ = !inQ; continue; }
-        if (ch === ',' && !inQ) { res.push(cur); cur = ''; continue; }
+        if (ch === sep && !inQ) { res.push(cur); cur = ''; continue; }
         cur += ch;
       }
       res.push(cur);
@@ -573,9 +579,10 @@
       reader.onload = function (ev) {
         participantes = [];
         var lines = ev.target.result.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+        var sep = detectDelimiter(lines[0] || '');
         lines.forEach(function (line, idx) {
           if (idx === 0 && /codigo/i.test(line)) return;
-          var parts = parseCSVLine(line);
+          var parts = parseCSVLine(line, sep);
           if (parts.length >= 2) {
             var c = parts[0].trim(), n = parts[1].trim();
             if (c && n) participantes.push({ codigo: c, nombre: n });
