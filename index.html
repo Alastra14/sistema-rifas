@@ -51,7 +51,7 @@
     .action-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:1.6rem 1.4rem;cursor:pointer;transition:all .25s;text-decoration:none;color:inherit;display:block;}
     .action-card:hover{background:rgba(255,255,255,.13);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,.3);border-color:rgba(239,129,24,.3);}
     .action-card.highlight{background:linear-gradient(135deg,rgba(239,129,24,.22),rgba(46,0,79,.45));border-color:rgba(239,129,24,.38);}
-    .action-icon{font-size:2.2rem;margin-bottom:.8rem;display:block;}
+    .action-icon{width:2.6rem;height:2.6rem;margin-bottom:.8rem;display:block;opacity:.9;}
     .action-card h3{font-size:.95rem;font-weight:700;margin-bottom:.4rem;letter-spacing:.05em;}
     .action-card p{font-size:.82rem;opacity:.68;line-height:1.55;}
     /* Panel */
@@ -151,16 +151,30 @@
     .metric-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:.9rem 1rem;text-align:center;}
     .metric-card span{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;opacity:.65;margin-bottom:.25rem;}
     .metric-card strong{font-size:1.8rem;font-weight:700;color:#f8b347;}
-    .sorteo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.85rem;min-height:120px;margin-bottom:1.5rem;}
-    /* Winner cards — más grandes */
-    .sorteo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.1rem;min-height:180px;margin-bottom:1.5rem;}
-    .winner-card{background:linear-gradient(135deg,rgba(239,129,24,.22),rgba(46,0,79,.7));border:1px solid rgba(239,129,24,.45);border-radius:24px;padding:1.8rem 1.2rem 1.4rem;text-align:center;animation:pop-in .5s cubic-bezier(.34,1.56,.64,1) both;position:relative;overflow:hidden;}
+    /* Winner grid — cols dinámico, centra cuando hay pocas tarjetas */
+    .sorteo-grid{display:grid;grid-template-columns:repeat(var(--cols,5),1fr);gap:1.1rem;margin-bottom:1.5rem;justify-items:stretch;}
+    .sorteo-grid[data-cols="1"]{max-width:340px;margin-left:auto;margin-right:auto;}
+    .sorteo-grid[data-cols="2"]{max-width:660px;margin-left:auto;margin-right:auto;}
+    .sorteo-grid[data-cols="3"]{max-width:980px;margin-left:auto;margin-right:auto;}
+    @media(max-width:700px){.sorteo-grid{grid-template-columns:repeat(2,1fr)!important;max-width:none!important;}}
+    @media(max-width:420px){.sorteo-grid{grid-template-columns:1fr!important;}}
+    .winner-card{background:linear-gradient(135deg,rgba(239,129,24,.22),rgba(46,0,79,.7));border:1px solid rgba(239,129,24,.45);border-radius:24px;padding:2rem 1rem 1.6rem;text-align:center;animation:pop-in .5s cubic-bezier(.34,1.56,.64,1) both;position:relative;overflow:hidden;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
     .winner-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(239,129,24,.12),transparent 70%);pointer-events:none;}
     .winner-card:nth-child(2){animation-delay:.07s;}.winner-card:nth-child(3){animation-delay:.14s;}.winner-card:nth-child(4){animation-delay:.21s;}.winner-card:nth-child(5){animation-delay:.28s;}
     @keyframes pop-in{from{transform:scale(.3) translateY(40px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
-    .winner-code{font-size:2.6rem;font-weight:900;color:#f8b347;margin-bottom:.5rem;letter-spacing:.04em;line-height:1;}
-    .winner-name{font-weight:700;font-size:1rem;line-height:1.4;margin-bottom:.75rem;}
-    .winner-prize{font-size:.8rem;opacity:.95;background:rgba(255,255,255,.13);padding:.35rem .9rem;border-radius:999px;display:inline-flex;align-items:center;gap:.4rem;}
+    .winner-code{font-size:2.8rem;font-weight:900;color:#f8b347;margin-bottom:.5rem;letter-spacing:.04em;line-height:1;}
+    .winner-name{font-weight:700;font-size:.95rem;line-height:1.4;margin-bottom:.75rem;}
+    .winner-prize{font-size:.78rem;opacity:.95;background:rgba(255,255,255,.13);padding:.35rem .9rem;border-radius:999px;display:inline-flex;align-items:center;gap:.4rem;}
+    /* Ocultar tabla y controles en fullscreen */
+    :fullscreen .sorteo-table-wrap,:fullscreen .sorteo-controls{display:none!important;}
+    :-webkit-full-screen .sorteo-table-wrap,:-webkit-full-screen .sorteo-controls{display:none!important;}
+    :-moz-full-screen .sorteo-table-wrap,:-moz-full-screen .sorteo-controls{display:none!important;}
+    /* Nav rondas */
+    .sorteo-nav{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.8rem;}
+    .sorteo-nav-label{font-size:.8rem;opacity:.6;text-align:center;flex:1;}
+    .btn-nav{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--snow);border-radius:999px;padding:.38rem .9rem;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
+    .btn-nav:hover:not(:disabled){background:rgba(255,255,255,.15);}
+    .btn-nav:disabled{opacity:.3;cursor:default;}
     /* Slot-machine spinning */
     .winner-card.spinning{animation:none;}
     .winner-card.spinning .winner-code{animation:slot-flicker .07s steps(1) infinite;color:rgba(248,179,71,.55);}
@@ -225,17 +239,17 @@
       </div>
       <div class="quick-actions">
         <a class="action-card highlight" href="#" onclick="openModal();return false;">
-          <span class="action-icon">🎫</span>
+          <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           <h3>NUEVA RIFA</h3>
           <p>Configura premios y participantes para iniciar un nuevo sorteo.</p>
         </a>
         <a class="action-card" href="#" onclick="showSection('rifas',document.getElementById('tab-rifas'));return false;">
-          <span class="action-icon">📋</span>
+          <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           <h3>MIS RIFAS</h3>
           <p>Gestiona rifas guardadas, retoma o reinicia sorteos en cualquier momento.</p>
         </a>
         <a class="action-card" href="#" onclick="showSection('historial',document.getElementById('tab-historial'));return false;">
-          <span class="action-icon">🏆</span>
+          <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
           <h3>HISTORIAL</h3>
           <p>Consulta todos los ganadores de rifas pasadas en un solo lugar.</p>
         </a>
@@ -270,6 +284,11 @@
         <div class="metric-card"><span>Ganadores</span><strong id="s-ganadores">0</strong></div>
         <div class="metric-card"><span>Participantes restantes</span><strong id="s-participantes">0</strong></div>
       </div>
+      <div class="sorteo-nav" id="sorteo-nav">
+        <button class="btn-nav" id="btn-nav-prev" onclick="navRonda(-1)" disabled>← Ronda anterior</button>
+        <span class="sorteo-nav-label" id="nav-label"></span>
+        <button class="btn-nav" id="btn-nav-next" onclick="navRonda(1)" disabled>Ronda siguiente →</button>
+      </div>
       <div class="sorteo-grid" id="sorteo-grid"></div>
       <div class="sorteo-controls">
         <button class="btn btn-primary" id="btn-sortear" onclick="sortearRonda()" style="font-size:1rem;padding:.75rem 2rem;">
@@ -289,7 +308,7 @@
           CSV
         </button>
       </div>
-      <div class="table-wrap">
+      <div class="sorteo-table-wrap table-wrap">
         <table>
           <thead><tr><th>#</th><th>Código</th><th>Nombre</th><th>Premio</th><th>Ronda</th></tr></thead>
           <tbody id="sorteo-hist-body"></tbody>
@@ -314,7 +333,7 @@
   <!-- Modal: Nueva Rifa -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
-      <h2>🎫 NUEVA RIFA</h2>
+      <h2>NUEVA RIFA</h2>
       <div class="field">
         <label>Nombre de la rifa</label>
         <input type="text" id="input-nombre" placeholder="Ej: Rifa Día del Empleado 2026" />
@@ -642,7 +661,7 @@
         filename = 'ejemplo_participantes.csv';
       }
       var a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }));
+      a.href = URL.createObjectURL(new Blob(['\uFEFF' + content], { type: 'text/csv;charset=utf-8' }));
       a.download = filename;
       a.click();
     }
@@ -890,7 +909,7 @@
           .map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','));
       });
       var a = el('a', '');
-      a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8' }));
+      a.href = URL.createObjectURL(new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8' }));
       a.download = rifa.nombre.replace(/\s+/g, '_') + '_ganadores.csv';
       a.click();
     }
@@ -905,7 +924,7 @@
         });
       });
       var a = el('a', '');
-      a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8' }));
+      a.href = URL.createObjectURL(new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8' }));
       a.download = 'historial_rifas_' + new Date().toISOString().slice(0, 10) + '.csv';
       a.click();
     }
@@ -917,6 +936,7 @@
     var sorteoRonda  = 0;
     var sorteoLog    = [];
     var SORTEO_N     = 5;
+    var viewRonda = null;  // null = ronda más reciente
     var ruletaActiva = false;
     var sorteandoAnim = false;
 
@@ -964,6 +984,8 @@
       document.getElementById('btn-sortear').disabled = true;
       var grid = document.getElementById('sorteo-grid');
       grid.textContent = '';
+      grid.style.setProperty('--cols', Math.min(n, SORTEO_N));
+      grid.setAttribute('data-cols', Math.min(n, SORTEO_N));
       var codesEls = [];
       // Crear tarjetas en estado spinning
       ganadores.forEach(function (g) {
@@ -1011,11 +1033,38 @@
     }
 
     function finalizarRonda() {
+      viewRonda = null; // reset a ronda actual al completar sorteo
       renderSorteoMetrics();
       renderSorteoHistorial();
       renderDashboard();
       document.getElementById('btn-sortear').disabled = !sorteoQueue.length || !sorteoPool.length;
       if (!sorteoQueue.length) toast('¡Rifa finalizada! Todos los premios han sido sorteados.');
+    }
+
+    function navRonda(delta) {
+      var target = (viewRonda === null ? sorteoRonda : viewRonda) + delta;
+      if (target < 1 || target > sorteoRonda) return;
+      viewRonda = (target === sorteoRonda) ? null : target;
+      var rondaActual = viewRonda === null ? sorteoRonda : viewRonda;
+      var ganadores = sorteoLog.filter(function(g) { return g.ronda === rondaActual; });
+      renderSorteoGanadores(ganadores);
+    }
+
+    function updateNavButtons() {
+      var prev = document.getElementById('btn-nav-prev');
+      var next = document.getElementById('btn-nav-next');
+      var label = document.getElementById('nav-label');
+      if (!prev) return;
+      var rondaActual = viewRonda === null ? sorteoRonda : viewRonda;
+      prev.disabled = sorteoRonda < 1 || rondaActual <= 1;
+      next.disabled = viewRonda === null || viewRonda >= sorteoRonda;
+      if (sorteoRonda < 1) {
+        label.textContent = '';
+      } else if (viewRonda === null) {
+        label.textContent = sorteoRonda > 0 ? 'Ronda ' + sorteoRonda + ' (actual)' : '';
+      } else {
+        label.textContent = 'Ronda ' + viewRonda + ' de ' + sorteoRonda;
+      }
     }
 
     function toggleRuleta() {
@@ -1050,6 +1099,7 @@
     function salirSorteo() {
       currentRifaId = null;
       sorteandoAnim = false;
+      viewRonda = null;
       renderDashboard();
       showSection('rifas', document.getElementById('tab-rifas'));
     }
@@ -1064,12 +1114,16 @@
     function renderSorteoGanadores(ganadores) {
       var grid = document.getElementById('sorteo-grid');
       grid.textContent = '';
+      var n = ganadores.length || SORTEO_N;
+      grid.style.setProperty('--cols', Math.min(n, SORTEO_N));
+      grid.setAttribute('data-cols', Math.min(n, SORTEO_N));
       if (!ganadores.length) {
         var p = el('p', '', sorteoLog.length
           ? 'Haz clic en "Sortear" para continuar.'
           : 'Haz clic en "Sortear" para iniciar el sorteo.');
         p.style.cssText = 'grid-column:1/-1;text-align:center;opacity:.5;padding:3rem 1rem;font-size:1rem;';
         grid.appendChild(p);
+        updateNavButtons();
         return;
       }
       ganadores.forEach(function (g) {
@@ -1082,6 +1136,7 @@
         card.appendChild(prize);
         grid.appendChild(card);
       });
+      updateNavButtons();
     }
 
     function renderSorteoHistorial() {
