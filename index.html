@@ -144,6 +144,32 @@
     .logo-badge img{width:120px;filter:drop-shadow(0 10px 16px rgba(0,0,0,.55));}
     footer{text-align:center;opacity:.45;font-size:.8rem;margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.06);}
     @media(max-width:600px){nav{padding:.75rem 1rem;gap:.6rem;flex-wrap:wrap;}.nav-title{display:none;}.nav-links{margin-left:auto;}.hero h1{font-size:1.7rem;}}
+    /* Sorteo en vivo */
+    .sorteo-header{display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+    .sorteo-titulo{font-size:1rem;font-weight:700;letter-spacing:.1em;margin:0;flex:1;text-align:center;}
+    .sorteo-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.7rem;margin-bottom:1.5rem;}
+    .metric-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:.9rem 1rem;text-align:center;}
+    .metric-card span{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;opacity:.65;margin-bottom:.25rem;}
+    .metric-card strong{font-size:1.8rem;font-weight:700;color:#f8b347;}
+    .sorteo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.85rem;min-height:120px;margin-bottom:1.5rem;}
+    .winner-card{background:linear-gradient(135deg,rgba(239,129,24,.2),rgba(46,0,79,.65));border:1px solid rgba(239,129,24,.4);border-radius:20px;padding:1.2rem .9rem;text-align:center;animation:pop-in .45s cubic-bezier(.34,1.56,.64,1) both;}
+    .winner-card:nth-child(2){animation-delay:.06s;}.winner-card:nth-child(3){animation-delay:.12s;}.winner-card:nth-child(4){animation-delay:.18s;}.winner-card:nth-child(5){animation-delay:.24s;}
+    @keyframes pop-in{from{transform:scale(.4) translateY(30px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+    .winner-code{font-size:1.6rem;font-weight:800;color:#f8b347;margin-bottom:.3rem;letter-spacing:.05em;}
+    .winner-name{font-weight:600;font-size:.85rem;line-height:1.35;margin-bottom:.55rem;}
+    .winner-prize{font-size:.75rem;opacity:.9;background:rgba(255,255,255,.12);padding:.25rem .7rem;border-radius:999px;display:inline-block;}
+    .sorteo-controls{display:flex;gap:.7rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap;}
+    .sorteo-done{text-align:center;padding:3rem 1rem;background:linear-gradient(135deg,rgba(80,200,100,.12),rgba(46,0,79,.4));border:1px solid rgba(80,200,100,.25);border-radius:20px;margin-bottom:1.5rem;}
+    .sorteo-done h3{font-size:1.5rem;margin-bottom:.5rem;color:#7dea7d;}
+    /* Nav sorteo context */
+    #nav-sorteo-back{display:none;}
+    body.in-sorteo #nav-sorteo-back{display:inline-flex;}
+    body.in-sorteo #nav-normal-links{display:none;}
+    /* Historial por rifa */
+    .historial-rifa-group{margin-bottom:1.8rem;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;}
+    .historial-rifa-hdr{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.1rem;background:rgba(255,255,255,.06);flex-wrap:wrap;gap:.5rem;}
+    .historial-rifa-hdr h3{font-size:.88rem;font-weight:700;letter-spacing:.05em;margin:0;}
+    .historial-rifa-hdr small{font-size:.75rem;opacity:.55;}
   </style>
 </head>
 <body>
@@ -160,45 +186,51 @@
     </div>
     <span class="nav-title">SISTEMA DE RIFAS</span>
     <div class="nav-links">
-      <button class="nav-btn active" id="tab-rifas"     onclick="showSection('rifas',this)">Mis Rifas</button>
-      <button class="nav-btn"        id="tab-historial" onclick="showSection('historial',this)">Historial</button>
-      <button class="nav-btn primary" onclick="openModal()">+ Nueva Rifa</button>
+      <button class="nav-btn" id="nav-sorteo-back" onclick="salirSorteo()">← Mis Rifas</button>
+      <div id="nav-normal-links" style="display:contents;">
+        <button class="nav-btn active" id="tab-home"      onclick="showSection('home',this)">Inicio</button>
+        <button class="nav-btn"        id="tab-rifas"     onclick="showSection('rifas',this)">Mis Rifas</button>
+        <button class="nav-btn"        id="tab-historial" onclick="showSection('historial',this)">Historial</button>
+        <button class="nav-btn primary" onclick="openModal()">+ Nueva Rifa</button>
+      </div>
     </div>
   </nav>
 
   <main>
-    <div class="hero">
-      <img src="https://cdn.prod.website-files.com/66675b9125183e4d2a7a474e/666c90cd19e53c04711fb57f_d0164f8abe71228f954cd1112db78b48_Capa_1.svg" alt="Logo Grupo Ternova" />
-      <h1 id="hero-title">GESTIÓN DE RIFAS</h1>
-      <p  id="hero-sub">Grupo Ternova · Sistema transparente de sorteos</p>
-    </div>
+    <!-- ── Inicio ──────────────────────────────────── -->
+    <section id="sec-home" class="section active">
+      <div class="hero">
+        <img src="https://cdn.prod.website-files.com/66675b9125183e4d2a7a474e/666c90cd19e53c04711fb57f_d0164f8abe71228f954cd1112db78b48_Capa_1.svg" alt="Logo Grupo Ternova" />
+        <h1 id="hero-title">GESTIÓN DE RIFAS</h1>
+        <p  id="hero-sub">Grupo Ternova · Sistema transparente de sorteos</p>
+      </div>
+      <div class="stats">
+        <div class="stat-card"><span>Total Rifas</span><strong id="stat-total">0</strong></div>
+        <div class="stat-card"><span>En Curso</span><strong id="stat-activas">0</strong></div>
+        <div class="stat-card"><span>Finalizadas</span><strong id="stat-finalizadas">0</strong></div>
+        <div class="stat-card"><span>Total Ganadores</span><strong id="stat-ganadores">0</strong></div>
+      </div>
+      <div class="quick-actions">
+        <a class="action-card highlight" href="#" onclick="openModal();return false;">
+          <span class="action-icon">🎫</span>
+          <h3>NUEVA RIFA</h3>
+          <p>Configura premios y participantes para iniciar un nuevo sorteo.</p>
+        </a>
+        <a class="action-card" href="#" onclick="showSection('rifas',document.getElementById('tab-rifas'));return false;">
+          <span class="action-icon">📋</span>
+          <h3>MIS RIFAS</h3>
+          <p>Gestiona rifas guardadas, retoma o reinicia sorteos en cualquier momento.</p>
+        </a>
+        <a class="action-card" href="#" onclick="showSection('historial',document.getElementById('tab-historial'));return false;">
+          <span class="action-icon">🏆</span>
+          <h3>HISTORIAL</h3>
+          <p>Consulta todos los ganadores de rifas pasadas en un solo lugar.</p>
+        </a>
+      </div>
+    </section>
 
-    <div class="stats">
-      <div class="stat-card"><span>Total Rifas</span><strong id="stat-total">0</strong></div>
-      <div class="stat-card"><span>En Curso</span><strong id="stat-activas">0</strong></div>
-      <div class="stat-card"><span>Finalizadas</span><strong id="stat-finalizadas">0</strong></div>
-      <div class="stat-card"><span>Total Ganadores</span><strong id="stat-ganadores">0</strong></div>
-    </div>
-
-    <div class="quick-actions">
-      <a class="action-card highlight" href="#" onclick="openModal();return false;">
-        <span class="action-icon">🎫</span>
-        <h3>NUEVA RIFA</h3>
-        <p>Configura premios y participantes para iniciar un nuevo sorteo.</p>
-      </a>
-      <a class="action-card" href="#" onclick="showSection('rifas',document.getElementById('tab-rifas'));return false;">
-        <span class="action-icon">📋</span>
-        <h3>MIS RIFAS</h3>
-        <p>Gestiona rifas guardadas, retoma o reinicia sorteos en cualquier momento.</p>
-      </a>
-      <a class="action-card" href="#" onclick="showSection('historial',document.getElementById('tab-historial'));return false;">
-        <span class="action-icon">🏆</span>
-        <h3>HISTORIAL</h3>
-        <p>Consulta todos los ganadores de rifas pasadas en un solo lugar.</p>
-      </a>
-    </div>
-
-    <section id="sec-rifas" class="section active panel">
+    <!-- ── Mis Rifas ───────────────────────────────── -->
+    <section id="sec-rifas" class="section panel">
       <div class="panel-header">
         <h2>MIS RIFAS</h2>
         <button class="btn btn-primary btn-sm" onclick="openModal()">+ Nueva Rifa</button>
@@ -206,19 +238,40 @@
       <div class="rifas-grid" id="rifas-grid"></div>
     </section>
 
-    <section id="sec-historial" class="section panel">
-      <div class="panel-header">
-        <h2>HISTORIAL DE GANADORES</h2>
-        <button class="btn btn-secondary btn-sm" onclick="exportarHistorial()">Descargar CSV</button>
+    <!-- ── Sorteo en Vivo ──────────────────────────── -->
+    <section id="sec-sorteo" class="section panel">
+      <div class="sorteo-header">
+        <button class="btn btn-secondary btn-sm" onclick="salirSorteo()">← Mis Rifas</button>
+        <h2 class="sorteo-titulo" id="sorteo-titulo">SORTEO EN VIVO</h2>
+        <div style="width:100px;"></div>
+      </div>
+      <div class="sorteo-metrics">
+        <div class="metric-card"><span>Ronda</span><strong id="s-ronda">0</strong></div>
+        <div class="metric-card"><span>Premios restantes</span><strong id="s-premios">0</strong></div>
+        <div class="metric-card"><span>Ganadores</span><strong id="s-ganadores">0</strong></div>
+        <div class="metric-card"><span>Participantes restantes</span><strong id="s-participantes">0</strong></div>
+      </div>
+      <div class="sorteo-grid" id="sorteo-grid"></div>
+      <div class="sorteo-controls">
+        <button class="btn btn-primary" id="btn-sortear" onclick="sortearRonda()">Sortear</button>
+        <button class="btn btn-secondary" onclick="reiniciarSorteo()">Reiniciar</button>
+        <button class="btn btn-secondary btn-sm" onclick="exportarGanadores()">Descargar CSV</button>
       </div>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>#</th><th>Rifa</th><th>Ronda</th><th>Colaborador</th><th>Código</th><th>Premio</th><th>Fecha</th></tr>
-          </thead>
-          <tbody id="historial-body"></tbody>
+          <thead><tr><th>#</th><th>Código</th><th>Nombre</th><th>Premio</th><th>Ronda</th></tr></thead>
+          <tbody id="sorteo-hist-body"></tbody>
         </table>
       </div>
+    </section>
+
+    <!-- ── Historial ───────────────────────────────── -->
+    <section id="sec-historial" class="section panel">
+      <div class="panel-header">
+        <h2>HISTORIAL DE GANADORES</h2>
+        <button class="btn btn-secondary btn-sm" onclick="exportarHistorialGlobal()">Descargar todo CSV</button>
+      </div>
+      <div id="historial-container"></div>
     </section>
   </main>
 
@@ -354,6 +407,12 @@
       document.getElementById('sec-' + name).classList.add('active');
       document.querySelectorAll('.nav-btn:not(.primary)').forEach(function (b) { b.classList.remove('active'); });
       if (btn) btn.classList.add('active');
+      // Contexto sorteo: cambia nav
+      if (name === 'sorteo') {
+        document.body.classList.add('in-sorteo');
+      } else {
+        document.body.classList.remove('in-sorteo');
+      }
     }
 
     // ── Modal ──────────────────────────────────────────────────────
@@ -705,40 +764,84 @@
     }
 
     function renderHistorial(rifas) {
-      var tbody = document.getElementById('historial-body');
-      tbody.textContent = '';
-      var n = 0;
+      var container = document.getElementById('historial-container');
+      container.textContent = '';
+      var hayGanadores = false;
       rifas.forEach(function (r) {
-        r.ganadores.forEach(function (g) {
-          n++;
-          var fechaStr = r.fecha ? new Date(r.fecha + 'T12:00:00').toLocaleDateString('es') : '—';
+        if (!r.ganadores || !r.ganadores.length) return;
+        hayGanadores = true;
+        var fechaStr = r.fecha ? new Date(r.fecha + 'T12:00:00').toLocaleDateString('es', { day:'numeric', month:'short', year:'numeric' }) : '—';
+        var group = el('div', 'historial-rifa-group');
+        // Header del grupo
+        var hdr = el('div', 'historial-rifa-hdr');
+        var info = el('div', '');
+        info.appendChild(el('h3', '', r.nombre));
+        info.appendChild(el('small', '', fechaStr + ' · ' + r.ganadores.length + ' ganadores'));
+        var btnDl = el('button', 'btn btn-secondary btn-sm', 'Descargar CSV');
+        btnDl.addEventListener('click', (function (rifa) {
+          return function () { exportarRifaCSV(rifa); };
+        })(r));
+        hdr.appendChild(info);
+        hdr.appendChild(btnDl);
+        group.appendChild(hdr);
+        // Tabla
+        var wrap = el('div', 'table-wrap');
+        var tbl = document.createElement('table');
+        var thead = document.createElement('thead');
+        var hr = document.createElement('tr');
+        ['#','Código','Nombre','Premio','Ronda'].forEach(function(h){ hr.appendChild(el('th','',h)); });
+        thead.appendChild(hr);
+        tbl.appendChild(thead);
+        var tbody = document.createElement('tbody');
+        r.ganadores.forEach(function (g, i) {
           var tr = document.createElement('tr');
-          [n, r.nombre, g.ronda || '—', g.nombre || '—', g.codigo || '—', g.premio || '—', fechaStr].forEach(function (v) {
-            var td = el('td', '', v);
-            tr.appendChild(td);
-          });
+          [i+1, g.codigo||'—', g.nombre||'—', g.premio||'—', g.ronda||'—'].forEach(function(v){ tr.appendChild(el('td','',v)); });
           tbody.appendChild(tr);
         });
+        tbl.appendChild(tbody);
+        wrap.appendChild(tbl);
+        group.appendChild(wrap);
+        container.appendChild(group);
       });
-      if (!n) {
-        var tr = document.createElement('tr');
-        var td = el('td', '', 'Sin ganadores registrados aún');
-        td.colSpan = 7;
-        td.style.cssText = 'text-align:center;opacity:.45;padding:2.5rem';
-        tr.appendChild(td);
-        tbody.appendChild(tr);
+      if (!hayGanadores) {
+        var msg = el('p', '', 'Sin ganadores registrados aún. Ejecuta una rifa para ver resultados aquí.');
+        msg.style.cssText = 'text-align:center;opacity:.45;padding:3rem 1rem;';
+        container.appendChild(msg);
       }
     }
 
-    // ── Acciones ───────────────────────────────────────────────────
+    // ── Acciones de rifa ───────────────────────────────────────────
     function ejecutarRifa(id) {
       var rifas = getRifas();
       var rifa = rifas.find(function (r) { return r.id === id; });
       if (!rifa) return;
-      rifa.estado = 'en_curso';
-      saveRifas(rifas);
-      localStorage.setItem('rifa_activa', JSON.stringify(rifa));
-      window.location.href = 'rifa.html';
+      if (rifa.estado !== 'en_curso') {
+        rifa.estado = 'en_curso';
+        saveRifas(rifas);
+      }
+      // Inicializar estado del sorteo
+      currentRifaId = id;
+      var yaGanaron = new Set((rifa.ganadores || []).map(function (g) { return g.codigo; }));
+      sorteoPool = rifaShuffle(rifa.participantes.filter(function (p) { return !yaGanaron.has(p.codigo); }));
+      // Expandir premios por qty
+      var premiosBase = [];
+      rifa.premios.forEach(function (p) {
+        for (var i = 0; i < p.qty; i++) premiosBase.push(p.nombre);
+      });
+      var ganados = (rifa.ganadores || []).length;
+      sorteoQueue = premiosBase.slice(ganados);
+      sorteoRonda = rifa.ganadores && rifa.ganadores.length
+        ? Math.max.apply(null, rifa.ganadores.map(function (g) { return g.ronda || 0; }))
+        : 0;
+      sorteoLog = (rifa.ganadores || []).slice();
+      // Actualizar UI del sorteo
+      document.getElementById('sorteo-titulo').textContent = rifa.nombre;
+      renderSorteoMetrics();
+      renderSorteoGanadores([]);
+      renderSorteoHistorial();
+      document.getElementById('btn-sortear').disabled = !sorteoQueue.length || !sorteoPool.length;
+      if (sorteoLog.length) toast('Retomando sorteo · ' + sorteoLog.length + ' ganadores previos');
+      showSection('sorteo', null);
     }
 
     function eliminarRifa(id) {
@@ -748,19 +851,142 @@
       toast('Rifa eliminada');
     }
 
-    function exportarHistorial() {
+    function exportarRifaCSV(rifa) {
+      var rows = ['"#","Codigo","Nombre","Premio","Ronda"'];
+      (rifa.ganadores || []).forEach(function (g, i) {
+        rows.push([i+1, g.codigo||'', g.nombre||'', g.premio||'', g.ronda||'']
+          .map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','));
+      });
+      var a = el('a', '');
+      a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8' }));
+      a.download = rifa.nombre.replace(/\s+/g, '_') + '_ganadores.csv';
+      a.click();
+    }
+
+    function exportarHistorialGlobal() {
       var rifas = getRifas();
       var rows = ['"Rifa","Ronda","Colaborador","Codigo","Premio","Fecha"'];
       rifas.forEach(function (r) {
         r.ganadores.forEach(function (g) {
-          rows.push([r.nombre, g.ronda || '', g.nombre || '', g.codigo || '', g.premio || '', r.fecha || '']
+          rows.push([r.nombre, g.ronda||'', g.nombre||'', g.codigo||'', g.premio||'', r.fecha||'']
             .map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','));
         });
       });
-      var a = document.createElement('a');
+      var a = el('a', '');
       a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8' }));
       a.download = 'historial_rifas_' + new Date().toISOString().slice(0, 10) + '.csv';
       a.click();
+    }
+
+    // ── Sorteo en vivo ─────────────────────────────────────────────
+    var currentRifaId = null;
+    var sorteoPool   = [];   // participantes disponibles (ya sorteados excluidos)
+    var sorteoQueue  = [];   // premios pendientes (plana, expandida por qty)
+    var sorteoRonda  = 0;
+    var sorteoLog    = [];   // [{codigo, nombre, premio, ronda}]
+    var SORTEO_N = 5;        // ganadores por ronda
+
+    function rifaShuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      return a;
+    }
+
+    function sortearRonda() {
+      if (!sorteoQueue.length || !sorteoPool.length) return;
+      sorteoRonda++;
+      var n = Math.min(SORTEO_N, sorteoQueue.length, sorteoPool.length);
+      var rondaGanadores = [];
+      for (var i = 0; i < n; i++) {
+        var p = sorteoPool.shift();
+        var premio = sorteoQueue.shift();
+        var g = { codigo: p.codigo, nombre: p.nombre, premio: premio, ronda: sorteoRonda };
+        rondaGanadores.push(g);
+        sorteoLog.push(g);
+      }
+      // Guardar en localStorage
+      var rifas = getRifas();
+      var rifa = rifas.find(function (r) { return r.id === currentRifaId; });
+      if (rifa) {
+        rifa.ganadores = sorteoLog.slice();
+        if (!sorteoQueue.length) rifa.estado = 'finalizada';
+        saveRifas(rifas);
+      }
+      renderSorteoMetrics();
+      renderSorteoGanadores(rondaGanadores);
+      renderSorteoHistorial();
+      renderDashboard();
+      document.getElementById('btn-sortear').disabled = !sorteoQueue.length || !sorteoPool.length;
+      if (!sorteoQueue.length) toast('¡Rifa finalizada! Todos los premios han sido sorteados.');
+    }
+
+    function reiniciarSorteo() {
+      if (!confirm('¿Reiniciar el sorteo? Se borrarán todos los ganadores registrados.')) return;
+      var rifas = getRifas();
+      var rifa = rifas.find(function (r) { return r.id === currentRifaId; });
+      if (rifa) {
+        rifa.ganadores = [];
+        rifa.estado = 'en_curso';
+        saveRifas(rifas);
+        ejecutarRifa(currentRifaId);
+        toast('Sorteo reiniciado');
+      }
+    }
+
+    function salirSorteo() {
+      currentRifaId = null;
+      renderDashboard();
+      showSection('rifas', document.getElementById('tab-rifas'));
+    }
+
+    function renderSorteoMetrics() {
+      document.getElementById('s-ronda').textContent = sorteoRonda;
+      document.getElementById('s-premios').textContent = sorteoQueue.length;
+      document.getElementById('s-ganadores').textContent = sorteoLog.length;
+      document.getElementById('s-participantes').textContent = sorteoPool.length;
+    }
+
+    function renderSorteoGanadores(ganadores) {
+      var grid = document.getElementById('sorteo-grid');
+      grid.textContent = '';
+      if (!ganadores.length) {
+        var p = el('p', '', sorteoLog.length
+          ? 'Haz clic en "Sortear" para continuar.'
+          : 'Haz clic en "Sortear" para iniciar el sorteo.');
+        p.style.cssText = 'grid-column:1/-1;text-align:center;opacity:.5;padding:3rem 1rem;';
+        grid.appendChild(p);
+        return;
+      }
+      ganadores.forEach(function (g) {
+        var card = el('div', 'winner-card');
+        card.appendChild(el('div', 'winner-code', g.codigo));
+        card.appendChild(el('div', 'winner-name', g.nombre));
+        card.appendChild(el('div', 'winner-prize', '🎁 ' + g.premio));
+        grid.appendChild(card);
+      });
+    }
+
+    function renderSorteoHistorial() {
+      var tbody = document.getElementById('sorteo-hist-body');
+      tbody.textContent = '';
+      var rev = sorteoLog.slice().reverse();
+      rev.forEach(function (g, i) {
+        var tr = document.createElement('tr');
+        [sorteoLog.length - i, g.codigo, g.nombre, g.premio, g.ronda].forEach(function (v) {
+          tr.appendChild(el('td', '', v));
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    function exportarGanadores() {
+      var rifas = getRifas();
+      var rifa = currentRifaId ? rifas.find(function (r) { return r.id === currentRifaId; }) : null;
+      if (!rifa) return;
+      exportarRifaCSV(rifa);
     }
 
     var _tt;
