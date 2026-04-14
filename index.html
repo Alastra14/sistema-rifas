@@ -122,6 +122,10 @@
     .mode-tab.active{background:rgba(239,129,24,.22);border-color:rgba(239,129,24,.5);color:#f8b347;}
     .mode-tab-link{font-size:.72rem;opacity:.5;color:var(--snow);text-decoration:none;margin-left:auto;transition:opacity .2s;}
     .mode-tab-link:hover{opacity:.9;text-decoration:underline;}
+    .template-hint{display:flex;align-items:center;justify-content:space-between;margin-top:.6rem;padding:.5rem .75rem;background:rgba(239,129,24,.1);border:1px solid rgba(239,129,24,.25);border-radius:10px;font-size:.78rem;}
+    .template-hint span{opacity:.75;}
+    .template-btn{color:#f8b347;font-weight:600;text-decoration:none;font-size:.78rem;transition:opacity .2s;}
+    .template-btn:hover{opacity:.75;text-decoration:underline;}
     .mode-panel{display:none;}
     .mode-panel.active{display:block;}
     /* Persona list (entrada manual de participantes) */
@@ -251,7 +255,7 @@
             <button class="btn btn-secondary btn-sm" onclick="agregarPremio()">+</button>
           </div>
         </div>
-        <!-- Panel CSV -->
+        <!-- Panel CSV premios -->
         <div id="premios-csv" class="mode-panel">
           <div class="drop-zone" id="dz-premios" onclick="document.getElementById('csv-premios').click()">
             <span class="dz-icon">+</span>
@@ -259,6 +263,10 @@
             <small>Columnas: nombre,cantidad</small>
           </div>
           <input type="file" id="csv-premios" accept=".csv" style="display:none" />
+          <div class="template-hint">
+            <span>No tienes el formato?</span>
+            <a href="#" onclick="descargarTemplate('premios');return false;" class="template-btn">Descargar CSV de ejemplo</a>
+          </div>
         </div>
       </div>
 
@@ -279,7 +287,7 @@
             <button class="btn btn-secondary btn-sm" onclick="agregarPersona()">+</button>
           </div>
         </div>
-        <!-- Panel CSV -->
+        <!-- Panel CSV participantes -->
         <div id="participantes-csv" class="mode-panel">
           <div class="drop-zone" id="drop-zone" onclick="document.getElementById('csv-file').click()">
             <span class="dz-icon">+</span>
@@ -287,6 +295,10 @@
             <small>Columnas: codigo,nombre</small>
           </div>
           <input type="file" id="csv-file" accept=".csv" style="display:none" />
+          <div class="template-hint">
+            <span>No tienes el formato?</span>
+            <a href="#" onclick="descargarTemplate('participantes');return false;" class="template-btn">Descargar CSV de ejemplo</a>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -503,11 +515,27 @@
     function descargarTemplate(tipo) {
       var content, filename;
       if (tipo === 'premios') {
-        content = 'nombre,cantidad\nBicicleta,1\nVale de supermercado,3\nSmartphone,1';
-        filename = 'plantilla_premios.csv';
+        content = [
+          'nombre,cantidad',
+          'Smart TV 55"',1',
+          'Bicicleta de montaña,1',
+          'Vale de supermercado $50,5',
+          'Auriculares inalambricos,3',
+          'Tablet,2',
+          'Cafetera,4'
+        ].join('\n');
+        filename = 'ejemplo_premios.csv';
       } else {
-        content = 'codigo,nombre\n1001,Juan Pérez\n1002,María García\n1003,Carlos López';
-        filename = 'plantilla_participantes.csv';
+        content = [
+          'codigo,nombre',
+          '1001,Carlos Alberto Ramirez',
+          '1002,Maria Elena Garcia',
+          '1003,Jorge Luis Mendez',
+          '1004,Ana Patricia Lopez',
+          '1005,Roberto Carlos Flores',
+          '1006,Lucia Martinez Torres'
+        ].join('\n');
+        filename = 'ejemplo_participantes.csv';
       }
       var a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }));
